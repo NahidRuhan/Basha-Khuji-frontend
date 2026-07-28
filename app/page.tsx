@@ -38,6 +38,7 @@ export default function Home() {
             src="/hero_banner.jpg" 
             alt="Modern apartment building" 
             fill 
+            sizes="100vw"
             className="object-cover opacity-30 dark:opacity-20" 
             priority
           />

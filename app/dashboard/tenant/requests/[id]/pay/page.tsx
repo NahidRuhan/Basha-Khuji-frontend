@@ -111,6 +111,7 @@ export default function PaymentInitiationPage({ params }: { params: Promise<{ id
                       src={propertyImage} 
                       alt={property.propertyName} 
                       fill 
+                      sizes="(max-width: 640px) 100vw, 128px"
                       className="object-cover" 
                     />
                   </div>

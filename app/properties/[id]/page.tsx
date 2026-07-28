@@ -125,6 +125,7 @@ export default function PropertyDetailsPage({ params }: { params: Promise<{ id: 
               src={primaryImage}
               alt={property.propertyName}
               fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 75vw, 60vw"
               className="object-cover transition-transform duration-500 group-hover:scale-105"
               priority
             />
@@ -140,6 +141,7 @@ export default function PropertyDetailsPage({ params }: { params: Promise<{ id: 
                     src={validImg}
                     alt={`${property.propertyName} - View ${idx + 2}`}
                     fill
+                    sizes="(max-width: 768px) 0vw, (max-width: 1200px) 25vw, 20vw"
                     className="object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                 </div>
