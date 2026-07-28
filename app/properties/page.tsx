@@ -235,6 +235,28 @@ function PropertiesContent() {
           </Select>
         </div>
       </div>
+
+      <div className="pt-4 border-t">
+        <Button 
+          variant="outline" 
+          className="w-full"
+          onClick={() => {
+            setSearchTerm("");
+            setMinPrice("");
+            setMaxPrice("");
+            setCategoryName("all");
+            setLocationName("all");
+            setMinBedrooms("");
+            setMinSquarefoot("");
+            setMaxSquarefoot("");
+            setSortBy("createdAt");
+            setSortOrder("desc");
+            router.push("/properties");
+          }}
+        >
+          Clear Filters
+        </Button>
+      </div>
     </div>
   );
 
