@@ -8,9 +8,8 @@ import { Moon, Sun } from "lucide-react";
 
 import { useAuthStore } from "@/store/auth-store";
 import { UserRole } from "@/types";
-import { useLogout } from "@/hooks/use-auth"; // We will create this in Phase 10
 
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -112,17 +111,15 @@ export function Navbar() {
 
           {isAuthenticated ? (
             <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="relative h-9 w-9 rounded-full">
-                  <Avatar className="h-9 w-9 border-2 border-primary/20">
-                    <AvatarImage src={user?.profileImage || ""} alt={user?.userName} />
-                    <AvatarFallback className="bg-primary/10 text-primary">
-                      {user?.userName?.charAt(0).toUpperCase() || "U"}
-                    </AvatarFallback>
-                  </Avatar>
-                </Button>
+              <DropdownMenuTrigger className="relative h-9 w-9 rounded-full flex items-center justify-center outline-none focus-visible:ring-2 focus-visible:ring-ring hover:opacity-80 transition-opacity">
+                <Avatar className="h-9 w-9 border-2 border-primary/20">
+                  <AvatarImage src={user?.profileImage || ""} alt={user?.userName} />
+                  <AvatarFallback className="bg-primary/10 text-primary">
+                    {user?.userName?.charAt(0).toUpperCase() || "U"}
+                  </AvatarFallback>
+                </Avatar>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56" align="end" forceMount>
+              <DropdownMenuContent className="w-56" align="end">
                 <DropdownMenuLabel className="font-normal">
                   <div className="flex flex-col space-y-1">
                     <p className="text-sm font-medium leading-none">{user?.userName}</p>
@@ -137,15 +134,15 @@ export function Navbar() {
                   </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem asChild>
-                  <Link href={getDashboardLink()} className="cursor-pointer">
+                <DropdownMenuItem>
+                  <Link href={getDashboardLink()} className="cursor-pointer flex items-center w-full">
                     <LayoutDashboard className="mr-2 h-4 w-4" />
                     <span>Dashboard</span>
                   </Link>
                 </DropdownMenuItem>
                 {user?.role === UserRole.TENANT && (
-                  <DropdownMenuItem asChild>
-                    <Link href="/dashboard/tenant/profile" className="cursor-pointer">
+                  <DropdownMenuItem>
+                    <Link href="/dashboard/tenant/profile" className="cursor-pointer flex items-center w-full">
                       <UserCircle className="mr-2 h-4 w-4" />
                       <span>Profile</span>
                     </Link>
@@ -160,22 +157,20 @@ export function Navbar() {
             </DropdownMenu>
           ) : (
             <div className="hidden md:flex items-center gap-2">
-              <Button variant="ghost" asChild>
-                <Link href="/auth/login">Log in</Link>
-              </Button>
-              <Button asChild>
-                <Link href="/auth/register">Sign up</Link>
-              </Button>
+              <Link href="/auth/login" className={buttonVariants({ variant: "ghost" })}>
+                Log in
+              </Link>
+              <Link href="/auth/register" className={buttonVariants({ variant: "default" })}>
+                Sign up
+              </Link>
             </div>
           )}
 
           {/* Mobile Menu */}
           <Sheet>
-            <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="md:hidden">
-                <Menu className="h-5 w-5" />
-                <span className="sr-only">Toggle menu</span>
-              </Button>
+            <SheetTrigger className={buttonVariants({ variant: "ghost", size: "icon", className: "md:hidden" })}>
+              <Menu className="h-5 w-5" />
+              <span className="sr-only">Toggle menu</span>
             </SheetTrigger>
             <SheetContent side="right">
               <SheetHeader>
@@ -227,12 +222,12 @@ export function Navbar() {
 
                 {!isAuthenticated && (
                   <div className="flex flex-col gap-2 mt-4 border-t pt-4">
-                    <Button variant="outline" asChild className="w-full justify-start">
-                      <Link href="/auth/login">Log in</Link>
-                    </Button>
-                    <Button asChild className="w-full justify-start">
-                      <Link href="/auth/register">Sign up</Link>
-                    </Button>
+                    <Link href="/auth/login" className={buttonVariants({ variant: "outline", className: "w-full justify-start" })}>
+                      Log in
+                    </Link>
+                    <Link href="/auth/register" className={buttonVariants({ variant: "default", className: "w-full justify-start" })}>
+                      Sign up
+                    </Link>
                   </div>
                 )}
                 
