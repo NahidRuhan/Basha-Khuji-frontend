@@ -8,7 +8,6 @@ import { Moon, Sun } from "lucide-react";
 
 import { useAuthStore } from "@/store/auth-store";
 import { UserRole } from "@/types";
-
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -26,21 +25,17 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useLogout } from "@/hooks/use-auth";
 
 export function Navbar() {
   const { user, isAuthenticated } = useAuthStore();
   const { setTheme, theme } = useTheme();
   const pathname = usePathname();
   
-  // Use a mock logout if the hook isn't ready yet
-  // const { mutate: logout } = useLogout();
+  const { mutate: logout } = useLogout();
+  
   const handleLogout = () => {
-    // logout();
-    // For now:
-    import("@/lib/auth").then(({ clearTokens }) => {
-      clearTokens();
-      window.location.href = "/auth/login";
-    });
+    logout();
   };
 
   const getDashboardLink = () => {
