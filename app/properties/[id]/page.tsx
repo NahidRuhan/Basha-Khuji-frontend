@@ -11,7 +11,10 @@ import {
   Building, 
   ArrowLeft,
   Calendar,
-  ShieldCheck
+  ShieldCheck,
+  Mail,
+  Phone,
+  Briefcase
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -242,7 +245,7 @@ export default function PropertyDetailsPage({ params }: { params: Promise<{ id: 
                 <CardHeader className="pb-4 border-b">
                   <CardTitle className="text-lg">Listed by</CardTitle>
                 </CardHeader>
-                <CardContent className="pt-4">
+                <CardContent className="pt-4 space-y-4">
                   <div className="flex items-center gap-4">
                     <Avatar className="h-12 w-12 border">
                       <AvatarImage src={property.user.profileImage || ""} alt={property.user.userName} />
@@ -255,6 +258,38 @@ export default function PropertyDetailsPage({ params }: { params: Promise<{ id: 
                       <p className="text-sm text-muted-foreground">Property Landlord</p>
                     </div>
                   </div>
+
+                  {(property.user.email || property.user.phoneNumber || property.user.occupation || property.user.address) && (
+                    <>
+                      <Separator />
+                      <div className="space-y-3 text-sm">
+                        {property.user.email && (
+                          <div className="flex items-center gap-3 text-muted-foreground">
+                            <Mail className="h-4 w-4 shrink-0 text-primary" />
+                            <span className="truncate" title={property.user.email}>{property.user.email}</span>
+                          </div>
+                        )}
+                        {property.user.phoneNumber && (
+                          <div className="flex items-center gap-3 text-muted-foreground">
+                            <Phone className="h-4 w-4 shrink-0 text-primary" />
+                            <span>{property.user.phoneNumber}</span>
+                          </div>
+                        )}
+                        {property.user.occupation && (
+                          <div className="flex items-center gap-3 text-muted-foreground">
+                            <Briefcase className="h-4 w-4 shrink-0 text-primary" />
+                            <span className="truncate" title={property.user.occupation}>{property.user.occupation}</span>
+                          </div>
+                        )}
+                        {property.user.address && (
+                          <div className="flex items-center gap-3 text-muted-foreground">
+                            <MapPin className="h-4 w-4 shrink-0 text-primary" />
+                            <span className="truncate" title={property.user.address}>{property.user.address}</span>
+                          </div>
+                        )}
+                      </div>
+                    </>
+                  )}
                 </CardContent>
               </Card>
             )}
