@@ -7,10 +7,12 @@ import { Search, SlidersHorizontal, MapPin, Building, BedDouble, ArrowRight, Loa
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { PropertyCard } from "@/components/shared/property-card";
 import { PropertyCardSkeleton } from "@/components/shared/loading-skeleton";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { useProperties } from "@/hooks/use-properties";
+import { useCategories, useLocations } from "@/hooks/use-options";
 
 function PropertiesContent() {
   const searchParams = useSearchParams();
@@ -21,12 +23,33 @@ function PropertiesContent() {
   const [minPrice, setMinPrice] = useState(searchParams.get("minPrice") || "");
   const [maxPrice, setMaxPrice] = useState(searchParams.get("maxPrice") || "");
   
+  const [categoryName, setCategoryName] = useState(searchParams.get("categoryName") || "all");
+  const [locationName, setLocationName] = useState(searchParams.get("locationName") || "all");
+  const [minBedrooms, setMinBedrooms] = useState(searchParams.get("minBedrooms") || "");
+  const [minSquarefoot, setMinSquarefoot] = useState(searchParams.get("minSquarefoot") || "");
+  const [maxSquarefoot, setMaxSquarefoot] = useState(searchParams.get("maxSquarefoot") || "");
+  const [sortBy, setSortBy] = useState(searchParams.get("sortBy") || "createdAt");
+  const [sortOrder, setSortOrder] = useState(searchParams.get("sortOrder") || "desc");
+
+  const [page, setPage] = useState(searchParams.get("page") ? Number(searchParams.get("page")) : 1);
+  
+  const { data: categoriesData } = useCategories();
+  const { data: locationsData } = useLocations();
+  
   // Derived active filters object
   const activeFilters = {
     searchTerm: searchParams.get("searchTerm") || undefined,
     minPrice: searchParams.get("minPrice") ? Number(searchParams.get("minPrice")) : undefined,
     maxPrice: searchParams.get("maxPrice") ? Number(searchParams.get("maxPrice")) : undefined,
+    categoryName: searchParams.get("categoryName") && searchParams.get("categoryName") !== "all" ? searchParams.get("categoryName")! : undefined,
+    locationName: searchParams.get("locationName") && searchParams.get("locationName") !== "all" ? searchParams.get("locationName")! : undefined,
+    minBedrooms: searchParams.get("minBedrooms") ? Number(searchParams.get("minBedrooms")) : undefined,
+    minSquarefoot: searchParams.get("minSquarefoot") ? Number(searchParams.get("minSquarefoot")) : undefined,
+    maxSquarefoot: searchParams.get("maxSquarefoot") ? Number(searchParams.get("maxSquarefoot")) : undefined,
+    sortBy: searchParams.get("sortBy") || "createdAt",
+    sortOrder: (searchParams.get("sortOrder") as "asc" | "desc") || "desc",
     limit: 12, // Show more on the browse page
+    page,
   };
 
   const { data, isLoading } = useProperties(activeFilters);
@@ -39,8 +62,26 @@ function PropertiesContent() {
     if (searchTerm) params.set("searchTerm", searchTerm);
     if (minPrice) params.set("minPrice", minPrice);
     if (maxPrice) params.set("maxPrice", maxPrice);
+    if (categoryName && categoryName !== "all") params.set("categoryName", categoryName);
+    if (locationName && locationName !== "all") params.set("locationName", locationName);
+    if (minBedrooms) params.set("minBedrooms", minBedrooms);
+    if (minSquarefoot) params.set("minSquarefoot", minSquarefoot);
+    if (maxSquarefoot) params.set("maxSquarefoot", maxSquarefoot);
+    if (sortBy && sortBy !== "createdAt") params.set("sortBy", sortBy);
+    if (sortOrder && sortOrder !== "desc") params.set("sortOrder", sortOrder);
+
+    params.set("page", "1"); // Reset to page 1 on new search
     
+    setPage(1);
     router.push(`/properties?${params.toString()}`);
+  };
+
+  const handlePageChange = (newPage: number) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("page", newPage.toString());
+    setPage(newPage);
+    router.push(`/properties?${params.toString()}`);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const FilterContent = () => (
@@ -79,6 +120,100 @@ function PropertiesContent() {
               onChange={(e) => setMaxPrice(e.target.value)}
             />
           </div>
+        </div>
+      </div>
+
+      <div className="space-y-2">
+        <Label>Category</Label>
+        <Select value={categoryName} onValueChange={(val) => setCategoryName(val || "all")}>
+          <SelectTrigger>
+            <SelectValue placeholder="All Categories" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Categories</SelectItem>
+            {categoriesData?.data?.map((cat) => (
+              <SelectItem key={cat.categoryId} value={cat.categoryName}>
+                {cat.categoryName}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+      <div className="space-y-2">
+        <Label>Location</Label>
+        <Select value={locationName} onValueChange={(val) => setLocationName(val || "all")}>
+          <SelectTrigger>
+            <SelectValue placeholder="All Locations" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Locations</SelectItem>
+            {locationsData?.data?.map((loc) => (
+              <SelectItem key={loc.locationId} value={loc.locationName}>
+                {loc.locationName}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+      <div className="space-y-2">
+        <Label>Min Bedrooms</Label>
+        <Input 
+          type="number" 
+          placeholder="Any" 
+          value={minBedrooms}
+          onChange={(e) => setMinBedrooms(e.target.value)}
+        />
+      </div>
+
+      <div className="space-y-3">
+        <Label>Square Footage</Label>
+        <div className="flex items-center gap-3">
+          <div className="space-y-1 w-full">
+            <Input 
+              type="number" 
+              placeholder="Min" 
+              value={minSquarefoot}
+              onChange={(e) => setMinSquarefoot(e.target.value)}
+            />
+          </div>
+          <span className="text-muted-foreground">-</span>
+          <div className="space-y-1 w-full">
+            <Input 
+              type="number" 
+              placeholder="Max" 
+              value={maxSquarefoot}
+              onChange={(e) => setMaxSquarefoot(e.target.value)}
+            />
+          </div>
+        </div>
+      </div>
+
+      <div className="space-y-3 border-t pt-4">
+        <Label className="text-muted-foreground text-xs uppercase tracking-wider">Sort Options</Label>
+        <div className="grid grid-cols-2 gap-3">
+          <Select value={sortBy} onValueChange={(val) => setSortBy(val || "createdAt")}>
+            <SelectTrigger>
+              <SelectValue placeholder="Sort By" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="createdAt">Newest</SelectItem>
+              <SelectItem value="price">Price</SelectItem>
+              <SelectItem value="bedroomCount">Bedrooms</SelectItem>
+              <SelectItem value="squarefoot">Squarefoot</SelectItem>
+            </SelectContent>
+          </Select>
+
+          <Select value={sortOrder} onValueChange={(val) => setSortOrder((val as "asc" | "desc") || "desc")}>
+            <SelectTrigger>
+              <SelectValue placeholder="Order" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="desc">Desc</SelectItem>
+              <SelectItem value="asc">Asc</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
       </div>
       
@@ -151,6 +286,13 @@ function PropertiesContent() {
                   setSearchTerm("");
                   setMinPrice("");
                   setMaxPrice("");
+                  setCategoryName("all");
+                  setLocationName("all");
+                  setMinBedrooms("");
+                  setMinSquarefoot("");
+                  setMaxSquarefoot("");
+                  setSortBy("createdAt");
+                  setSortOrder("desc");
                   router.push("/properties");
                 }}
               >
@@ -159,6 +301,29 @@ function PropertiesContent() {
             </div>
           )}
         </div>
+
+        {/* Pagination Controls */}
+        {data?.meta && data.meta.totalPages > 1 && (
+          <div className="flex justify-center items-center gap-2 mt-12">
+            <Button
+              variant="outline"
+              disabled={page <= 1}
+              onClick={() => handlePageChange(page - 1)}
+            >
+              Previous
+            </Button>
+            <div className="flex items-center gap-1 mx-4 text-sm font-medium">
+              Page {page} of {data.meta.totalPages}
+            </div>
+            <Button
+              variant="outline"
+              disabled={page >= data.meta.totalPages}
+              onClick={() => handlePageChange(page + 1)}
+            >
+              Next
+            </Button>
+          </div>
+        )}
       </main>
     </div>
   );

@@ -8,8 +8,14 @@ export interface PropertyFilters {
   minPrice?: number;
   maxPrice?: number;
   locationId?: string;
-  categoryId?: string;
-  bedroomCount?: number;
+  categoryId?: string; // Kept for backwards compatibility if needed, but backend expects categoryName
+  categoryName?: string;
+  locationName?: string;
+  minBedrooms?: number;
+  minSquarefoot?: number;
+  maxSquarefoot?: number;
+  sortBy?: string;
+  sortOrder?: "asc" | "desc";
   page?: number;
   limit?: number;
 }

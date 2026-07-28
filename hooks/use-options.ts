@@ -6,7 +6,7 @@ export const useCategories = () => {
   return useQuery({
     queryKey: ["categories"],
     queryFn: async () => {
-      const response = await api.get<ApiResponse<Category[]>>("/api/categories");
+      const response = await api.get<ApiResponse<Category[]>>("/api/properties/category");
       return response.data;
     },
   });
@@ -16,7 +16,7 @@ export const useLocations = () => {
   return useQuery({
     queryKey: ["locations"],
     queryFn: async () => {
-      const response = await api.get<ApiResponse<Location[]>>("/api/locations");
+      const response = await api.get<ApiResponse<Location[]>>("/api/properties/location");
       return response.data;
     },
   });
