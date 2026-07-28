@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import api from "@/lib/api";
 import { User, ApiResponse } from "@/types";
+import { useAuthStore } from "@/store/auth-store";
 
 export const useUpdateProfile = () => {
   const queryClient = useQueryClient();
@@ -13,8 +14,9 @@ export const useUpdateProfile = () => {
     },
     onSuccess: (data) => {
       toast.success(data.message || "Profile updated successfully!");
-      // Invalidate the "me" query so auth store updates if we refetch, 
-      // or we can just invalidate any profile-related queries
+      if (data.data?.user) {
+        useAuthStore.getState().setUser(data.data.user);
+      }
       queryClient.invalidateQueries({ queryKey: ["me"] });
     },
     onError: (error: any) => {

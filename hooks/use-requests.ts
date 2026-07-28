@@ -14,6 +14,17 @@ export const useMyRequests = () => {
   });
 };
 
+export const useRequest = (id: string) => {
+  return useQuery({
+    queryKey: ["request", id],
+    queryFn: async () => {
+      const response = await api.get<ApiResponse<RentalRequest>>(`/api/requests/${id}`);
+      return response.data;
+    },
+    enabled: !!id,
+  });
+};
+
 export const useCreateRequest = () => {
   const queryClient = useQueryClient();
   const router = useRouter();
@@ -42,7 +53,7 @@ export const useInitiatePayment = () => {
         success: boolean;
         message: string;
         data: { paymentUrl: string }; // Assuming backend returns Stripe Checkout URL
-      }>("/api/payments/create-payment", { requestId });
+      }>("/api/payments/create", { requestId });
       return response.data;
     },
     onSuccess: (data) => {

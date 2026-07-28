@@ -1,6 +1,6 @@
 "use client";
 
-import { useMyRequests, useInitiatePayment } from "@/hooks/use-requests";
+import { useMyRequests } from "@/hooks/use-requests";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -10,7 +10,6 @@ import { format } from "date-fns";
 
 export default function TenantRequestsPage() {
   const { data, isLoading } = useMyRequests();
-  const { mutate: initiatePayment, isPending: isPaying } = useInitiatePayment();
   const requests = data?.data || [];
 
   const getStatusColor = (status: string) => {
@@ -90,15 +89,10 @@ export default function TenantRequestsPage() {
                   </Link>
                   
                   {request.status === "APPROVED" && (
-                    <Button 
-                      size="sm" 
-                      className="bg-emerald-600 hover:bg-emerald-700 text-white"
-                      onClick={() => initiatePayment(request.requestId)}
-                      disabled={isPaying}
-                    >
-                      {isPaying ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <CreditCard className="h-4 w-4 mr-2" />}
+                    <Link href={`/dashboard/tenant/requests/${request.requestId}/pay`} className={buttonVariants({ size: "sm", className: "bg-emerald-600 hover:bg-emerald-700 text-white" })}>
+                      <CreditCard className="h-4 w-4 mr-2" />
                       Pay & Rent
-                    </Button>
+                    </Link>
                   )}
                 </div>
               </CardFooter>
