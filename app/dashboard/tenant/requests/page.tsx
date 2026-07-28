@@ -4,9 +4,10 @@ import { useMyRequests } from "@/hooks/use-requests";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { Loader2, Calendar, MapPin, Building, CreditCard } from "lucide-react";
+import { Loader2, Calendar, MapPin, Building, CreditCard, Star } from "lucide-react";
 import Link from "next/link";
 import { format } from "date-fns";
+import { ReviewModal } from "@/components/review-modal";
 
 export default function TenantRequestsPage() {
   const { data, isLoading } = useMyRequests();
@@ -71,6 +72,18 @@ export default function TenantRequestsPage() {
                   "{request.message}"
                 </div>
                 
+                {request.review && (
+                  <div className="bg-amber-50/50 p-4 rounded-lg border border-amber-200">
+                    <div className="flex items-center gap-1 mb-1.5">
+                      <span className="text-xs font-semibold uppercase tracking-wider text-amber-800/70 mr-1">Your Review:</span>
+                      {[...Array(5)].map((_, i) => (
+                        <Star key={i} className={`h-3.5 w-3.5 ${i < request.review!.rating ? "fill-amber-400 text-amber-400" : "text-gray-300"}`} />
+                      ))}
+                    </div>
+                    <p className="text-sm italic text-amber-900/80">"{request.review.review}"</p>
+                  </div>
+                )}
+                
                 <div className="flex justify-between text-sm text-muted-foreground">
                   <div className="flex items-center gap-1.5">
                     <Calendar className="h-4 w-4" />
@@ -93,6 +106,10 @@ export default function TenantRequestsPage() {
                       <CreditCard className="h-4 w-4 mr-2" />
                       Pay & Rent
                     </Link>
+                  )}
+                  
+                  {(request.status === "ACTIVE" || request.status === "COMPLETED") && !request.review && (
+                    <ReviewModal requestId={request.requestId} />
                   )}
                 </div>
               </CardFooter>

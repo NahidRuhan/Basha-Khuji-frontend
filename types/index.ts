@@ -91,6 +91,7 @@ export interface RentalRequest {
   
   property?: Property;
   user?: Partial<User>;
+  review?: Review;
 }
 
 export interface Payment {

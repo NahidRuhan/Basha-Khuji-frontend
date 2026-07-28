@@ -4,7 +4,7 @@ import { useAllRentals } from "@/hooks/use-admin";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Loader2, ClipboardList, CheckCircle2, XCircle, Clock, Building, User, Calendar } from "lucide-react";
+import { Loader2, ClipboardList, CheckCircle2, XCircle, Clock, Building, User, Calendar, Star } from "lucide-react";
 import Link from "next/link";
 import { format } from "date-fns";
 
@@ -111,9 +111,20 @@ export default function AdminRentalsPage() {
                           )}
                         </td>
                         <td className="px-6 py-4 align-top">
-                          <div className="text-xs text-muted-foreground max-w-xs line-clamp-3 bg-muted/30 p-2 rounded border-l-2 border-primary/20 italic">
+                          <div className="text-xs text-muted-foreground max-w-xs line-clamp-3 bg-muted/30 p-2 rounded border-l-2 border-primary/20 italic mb-2">
                             "{rental.message}"
                           </div>
+                          {rental.review && (
+                            <div className="text-xs text-amber-900/80 max-w-xs bg-amber-50/50 p-2 rounded border-l-2 border-amber-400/50 italic">
+                              <div className="flex items-center gap-1 mb-1">
+                                <span className="font-semibold uppercase tracking-wider text-[10px] text-amber-800">Review:</span>
+                                {[...Array(5)].map((_, i) => (
+                                  <Star key={i} className={`h-2.5 w-2.5 ${i < rental.review!.rating ? "fill-amber-400 text-amber-400" : "text-amber-200"}`} />
+                                ))}
+                              </div>
+                              "{rental.review.review}"
+                            </div>
+                          )}
                         </td>
                         <td className="px-6 py-4 align-top">
                           {getStatusBadge(rental.status)}

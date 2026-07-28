@@ -4,7 +4,7 @@ import { useLandlordRequests, useUpdateLandlordRequest } from "@/hooks/use-reque
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { Loader2, ClipboardList, CheckCircle2, XCircle, Clock, Building, User, Phone, Mail } from "lucide-react";
+import { Loader2, ClipboardList, CheckCircle2, XCircle, Clock, Building, User, Phone, Mail, Star } from "lucide-react";
 import Link from "next/link";
 import { format } from "date-fns";
 import { 
@@ -150,6 +150,22 @@ export default function LandlordRequestsPage() {
                       "{request.message}"
                     </p>
                   </div>
+                  
+                  {request.review && (
+                    <div className="bg-amber-50/50 rounded-lg p-4 mb-6 text-sm border border-amber-200">
+                      <div className="font-medium mb-2 flex items-center justify-between">
+                        <span className="text-amber-800 flex items-center gap-2"><Star className="h-4 w-4 fill-amber-400 text-amber-400" /> Tenant Review:</span>
+                        <div className="flex gap-1">
+                           {[...Array(5)].map((_, i) => (
+                             <Star key={i} className={`h-3 w-3 ${i < request.review!.rating ? "fill-amber-400 text-amber-400" : "text-amber-200"}`} />
+                           ))}
+                        </div>
+                      </div>
+                      <p className="whitespace-pre-wrap text-amber-900/80 mt-2 italic border-l-2 border-amber-400/50 pl-3">
+                        "{request.review.review}"
+                      </p>
+                    </div>
+                  )}
                   
                   <div className="flex flex-wrap gap-3 items-center justify-between border-t pt-4">
                     <div className="text-sm font-medium">Update Status:</div>

@@ -94,3 +94,18 @@ export const useUpdateLandlordRequest = () => {
     },
   });
 };
+
+export const useCreateReview = () => {
+  return useMutation({
+    mutationFn: async (data: { requestId: string; rating: number; review: string }) => {
+      const response = await api.post<ApiResponse<any>>("/api/reviews", data);
+      return response.data;
+    },
+    onSuccess: (data) => {
+      toast.success(data.message || "Review submitted successfully!");
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.message || "Failed to submit review.");
+    },
+  });
+};
