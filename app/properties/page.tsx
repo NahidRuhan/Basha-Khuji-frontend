@@ -211,10 +211,16 @@ function PropertiesContent() {
 
       <div className="space-y-3 border-t pt-4">
         <Label className="text-muted-foreground text-xs uppercase tracking-wider">Sort Options</Label>
-        <div className="grid grid-cols-2 gap-3">
+        <div className="flex flex-col gap-2">
           <Select value={sortBy} onValueChange={(val) => setSortBy(val || "createdAt")}>
-            <SelectTrigger>
-              <SelectValue placeholder="Sort By" />
+            <SelectTrigger className="w-full text-left font-normal">
+              <span className="truncate">
+                {sortBy === "createdAt" && "Newest"}
+                {sortBy === "price" && "Price"}
+                {sortBy === "bedroomCount" && "Bedrooms"}
+                {sortBy === "squarefoot" && "Squarefoot"}
+                {!sortBy && "Sort By"}
+              </span>
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="createdAt">Newest</SelectItem>
@@ -225,12 +231,14 @@ function PropertiesContent() {
           </Select>
 
           <Select value={sortOrder} onValueChange={(val) => setSortOrder((val as "asc" | "desc") || "desc")}>
-            <SelectTrigger>
-              <SelectValue placeholder="Order" />
+            <SelectTrigger className="w-full text-left font-normal">
+              <span className="truncate">
+                {sortOrder === "asc" ? "Ascending" : "Descending"}
+              </span>
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="desc">Desc</SelectItem>
-              <SelectItem value="asc">Asc</SelectItem>
+              <SelectItem value="desc">Descending</SelectItem>
+              <SelectItem value="asc">Ascending</SelectItem>
             </SelectContent>
           </Select>
         </div>
