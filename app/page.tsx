@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { Search, MapPin, Building, ArrowRight } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -32,10 +33,17 @@ export default function Home() {
       {/* Hero Section */}
       <section className="relative w-full py-20 md:py-32 lg:py-40 bg-muted overflow-hidden">
         {/* Background elements */}
-        <div className="absolute inset-0 z-0">
+        <div className="absolute inset-0 z-0 bg-background">
+          <Image 
+            src="/hero_banner.jpg" 
+            alt="Modern apartment building" 
+            fill 
+            className="object-cover opacity-30 dark:opacity-20" 
+            priority
+          />
           <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-primary/5 dark:from-primary/20 dark:to-background z-10" />
-          <div className="absolute top-0 -left-1/4 w-1/2 h-full bg-primary/5 blur-3xl rounded-full" />
-          <div className="absolute bottom-0 -right-1/4 w-1/2 h-full bg-primary/10 blur-3xl rounded-full" />
+          <div className="absolute top-0 -left-1/4 w-1/2 h-full bg-primary/5 blur-3xl rounded-full z-10" />
+          <div className="absolute bottom-0 -right-1/4 w-1/2 h-full bg-primary/10 blur-3xl rounded-full z-10" />
         </div>
         
         <div className="container px-4 md:px-6 relative z-20 mx-auto">

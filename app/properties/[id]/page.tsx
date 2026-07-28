@@ -18,6 +18,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useProperty } from "@/hooks/use-properties";
 import { useAuthStore } from "@/store/auth-store";
 
@@ -203,8 +204,8 @@ export default function PropertyDetailsPage({ params }: { params: Promise<{ id: 
           </div>
 
           {/* Sidebar / Action Card */}
-          <div className="space-y-6">
-            <Card className="sticky top-24 shadow-lg border-primary/10">
+          <div className="space-y-6 sticky top-24">
+            <Card className="shadow-lg border-primary/10">
               <CardHeader>
                 <CardTitle className="text-xl">Interested in renting?</CardTitle>
                 <CardDescription>Request to rent this property from the landlord.</CardDescription>
@@ -234,6 +235,29 @@ export default function PropertyDetailsPage({ params }: { params: Promise<{ id: 
                 </Button>
               </CardFooter>
             </Card>
+
+            {/* Landlord Info Card */}
+            {property.user && (
+              <Card className="shadow-sm">
+                <CardHeader className="pb-4 border-b">
+                  <CardTitle className="text-lg">Listed by</CardTitle>
+                </CardHeader>
+                <CardContent className="pt-4">
+                  <div className="flex items-center gap-4">
+                    <Avatar className="h-12 w-12 border">
+                      <AvatarImage src={property.user.profileImage || ""} alt={property.user.userName} />
+                      <AvatarFallback className="bg-primary/10 text-primary font-semibold text-lg">
+                        {property.user.userName?.charAt(0).toUpperCase() || "L"}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <p className="font-semibold text-foreground">{property.user.userName}</p>
+                      <p className="text-sm text-muted-foreground">Property Landlord</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
           </div>
         </div>
       </div>

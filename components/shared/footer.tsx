@@ -87,7 +87,7 @@ export function Footer() {
             &copy; {currentYear} Basha Khuji. All rights reserved.
           </p>
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            Made with <span className="text-red-500">♥</span> for Level 2
+            Made by <span className="text-primary font-bold">Nahid Pervej Ruhan</span>
           </div>
         </div>
       </div>
