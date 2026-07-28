@@ -15,6 +15,10 @@ const geistMono = Geist_Mono({
 import { ThemeProvider } from "@/providers/theme-provider";
 import { QueryProvider } from "@/providers/query-provider";
 import { AuthProvider } from "@/providers/auth-provider";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { Toaster } from "@/components/ui/sonner";
+import { Navbar } from "@/components/shared/navbar";
+import { Footer } from "@/components/shared/footer";
 
 export const metadata: Metadata = {
   title: "Basha Khuji",
@@ -41,7 +45,14 @@ export default function RootLayout({
         >
           <QueryProvider>
             <AuthProvider>
-              {children}
+              <TooltipProvider>
+                <div className="flex flex-col min-h-screen">
+                  <Navbar />
+                  <main className="flex-1">{children}</main>
+                  <Footer />
+                </div>
+                <Toaster position="top-center" richColors />
+              </TooltipProvider>
             </AuthProvider>
           </QueryProvider>
         </ThemeProvider>
