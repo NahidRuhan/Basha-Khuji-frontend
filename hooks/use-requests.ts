@@ -55,3 +55,31 @@ export const useInitiatePayment = () => {
     },
   });
 };
+
+export const useLandlordRequests = () => {
+  return useQuery({
+    queryKey: ["landlord-requests"],
+    queryFn: async () => {
+      const response = await api.get<PaginatedResponse<RentalRequest>>("/api/landlord/requests");
+      return response.data;
+    },
+  });
+};
+
+export const useUpdateLandlordRequest = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ id, status }: { id: string; status: string }) => {
+      const response = await api.patch<ApiResponse<RentalRequest>>(`/api/landlord/requests/${id}`, { status });
+      return response.data;
+    },
+    onSuccess: (data) => {
+      toast.success(data.message || "Request updated successfully!");
+      queryClient.invalidateQueries({ queryKey: ["landlord-requests"] });
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.message || "Failed to update request.");
+    },
+  });
+};

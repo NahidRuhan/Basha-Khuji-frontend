@@ -1,4 +1,5 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 import api from "@/lib/api";
 import { Property, PaginatedResponse, ApiResponse } from "@/types";
 
@@ -41,5 +42,71 @@ export const useProperty = (id: string) => {
       return response.data;
     },
     enabled: !!id,
+  });
+};
+
+export const useMyProperties = () => {
+  return useQuery({
+    queryKey: ["my-properties"],
+    queryFn: async () => {
+      const response = await api.get<ApiResponse<Property[]>>("/api/landlord/my-properties");
+      return response.data;
+    },
+  });
+};
+
+export const useCreateProperty = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (data: Partial<Property>) => {
+      const response = await api.post<ApiResponse<Property>>("/api/landlord/properties", data);
+      return response.data;
+    },
+    onSuccess: () => {
+      toast.success("Property created successfully!");
+      queryClient.invalidateQueries({ queryKey: ["my-properties"] });
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.message || "Failed to create property.");
+    },
+  });
+};
+
+export const useUpdateProperty = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ id, data }: { id: string; data: Partial<Property> }) => {
+      const response = await api.put<ApiResponse<Property>>(`/api/landlord/properties/${id}`, data);
+      return response.data;
+    },
+    onSuccess: (data) => {
+      toast.success("Property updated successfully!");
+      queryClient.invalidateQueries({ queryKey: ["my-properties"] });
+      queryClient.invalidateQueries({ queryKey: ["property", data.data?.propertyId] });
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.message || "Failed to update property.");
+    },
+  });
+};
+
+export const useDeleteProperty = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const response = await api.patch<ApiResponse<Property>>(`/api/landlord/properties/${id}`);
+      return response.data;
+    },
+    onSuccess: () => {
+      toast.success("Property deleted/archived successfully!");
+      queryClient.invalidateQueries({ queryKey: ["my-properties"] });
+      queryClient.invalidateQueries({ queryKey: ["properties"] });
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.message || "Failed to delete property.");
+    },
   });
 };

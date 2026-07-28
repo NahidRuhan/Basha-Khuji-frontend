@@ -73,7 +73,7 @@ export const useRegister = () => {
     mutationFn: async (data: RegisterValues) => {
       // Remove confirmPassword before sending to API
       const { confirmPassword, ...registerData } = data;
-      const response = await api.post<ApiResponse<User>>("/api/auth/register", registerData);
+      const response = await api.post<ApiResponse<User>>("/api/user/register", registerData);
       return response.data;
     },
     onSuccess: (data) => {
