@@ -157,17 +157,17 @@ export default function LandlordRequestsPage() {
                       <Select 
                         value={request.status} 
                         onValueChange={(val) => handleStatusUpdate(request.requestId, val)}
-                        disabled={updatingId === request.requestId || request.status === "ACTIVE" || request.status === "COMPLETED"}
+                        disabled={updatingId === request.requestId || request.status === "COMPLETED"}
                       >
                         <SelectTrigger className="w-[180px]">
                           <SelectValue placeholder="Change Status" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="PENDING">Pending</SelectItem>
-                          <SelectItem value="APPROVED">Approved</SelectItem>
-                          <SelectItem value="REJECTED">Rejected</SelectItem>
+                          <SelectItem value="PENDING" disabled={request.status === "ACTIVE"}>Pending</SelectItem>
+                          <SelectItem value="APPROVED" disabled={request.status === "ACTIVE"}>Approved</SelectItem>
+                          <SelectItem value="REJECTED" disabled={request.status === "ACTIVE"}>Rejected</SelectItem>
                           <SelectItem value="ACTIVE" disabled>Active</SelectItem>
-                          <SelectItem value="COMPLETED">Completed</SelectItem>
+                          <SelectItem value="COMPLETED" disabled={request.status !== "ACTIVE"}>Completed</SelectItem>
                         </SelectContent>
                       </Select>
                       {updatingId === request.requestId && <Loader2 className="h-4 w-4 animate-spin text-primary" />}

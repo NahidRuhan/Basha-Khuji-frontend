@@ -52,13 +52,13 @@ export const useInitiatePayment = () => {
       const response = await api.post<{
         success: boolean;
         message: string;
-        data: { paymentUrl: string }; // Assuming backend returns Stripe Checkout URL
+        data: { checkoutUrl: string }; 
       }>("/api/payments/create", { requestId });
       return response.data;
     },
     onSuccess: (data) => {
-      if (data.data?.paymentUrl) {
-        window.location.href = data.data.paymentUrl;
+      if (data.data?.checkoutUrl) {
+        window.location.href = data.data.checkoutUrl;
       }
     },
     onError: (error: any) => {

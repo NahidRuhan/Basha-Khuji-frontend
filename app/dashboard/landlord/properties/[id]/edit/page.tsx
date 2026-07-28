@@ -12,6 +12,7 @@ import { Loader2, ArrowLeft, Image as ImageIcon, X } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
 import { Switch } from "@/components/ui/switch";
+import { uploadImageToImgBB } from "@/lib/imgbb";
 
 export default function EditPropertyPage() {
   const router = useRouter();
@@ -35,7 +36,7 @@ export default function EditPropertyPage() {
   const [newAmenity, setNewAmenity] = useState("");
 
   const [images, setImages] = useState<string[]>([]);
-  const [newImage, setNewImage] = useState("");
+  const [isUploadingImages, setIsUploadingImages] = useState(false);
 
   useEffect(() => {
     if (propertyData?.data) {
@@ -73,10 +74,22 @@ export default function EditPropertyPage() {
     setAmenities(amenities.filter((_, i) => i !== index));
   };
 
-  const addImage = () => {
-    if (newImage.trim()) {
-      setImages([...images, newImage.trim()]);
-      setNewImage("");
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    if (files.length === 0) return;
+
+    try {
+      setIsUploadingImages(true);
+      const uploadPromises = files.map(file => uploadImageToImgBB(file));
+      const urls = await Promise.all(uploadPromises);
+      setImages(prev => [...prev, ...urls]);
+      toast.success(`${urls.length} image(s) uploaded successfully.`);
+    } catch (error) {
+      console.error("Failed to upload images", error);
+      toast.error("Failed to upload some images. Please try again.");
+    } finally {
+      setIsUploadingImages(false);
+      e.target.value = '';
     }
   };
 
@@ -272,33 +285,45 @@ export default function EditPropertyPage() {
             <Card>
               <CardHeader>
                 <CardTitle>Images</CardTitle>
+                <CardDescription>Upload property images</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="flex gap-2">
-                  <Input 
-                    placeholder="https://..." 
-                    value={newImage}
-                    onChange={(e) => setNewImage(e.target.value)}
-                    onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addImage())}
-                  />
-                  <Button type="button" onClick={addImage} variant="secondary">Add</Button>
+                <div className="flex items-center justify-center w-full">
+                  <label htmlFor="dropzone-file" className={`flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer bg-muted/20 hover:bg-muted/50 border-muted-foreground/25 ${isUploadingImages ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                    <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                      {isUploadingImages ? (
+                        <Loader2 className="w-8 h-8 mb-3 text-muted-foreground animate-spin" />
+                      ) : (
+                        <ImageIcon className="w-8 h-8 mb-3 text-muted-foreground opacity-50" />
+                      )}
+                      <p className="mb-2 text-sm text-muted-foreground text-center">
+                        <span className="font-semibold">Click to upload</span> or drag and drop
+                      </p>
+                      <p className="text-xs text-muted-foreground">PNG, JPG or WEBP</p>
+                    </div>
+                    <input 
+                      id="dropzone-file" 
+                      type="file" 
+                      accept="image/*" 
+                      multiple 
+                      className="hidden" 
+                      onChange={handleImageUpload}
+                      disabled={isUploadingImages || isUpdating}
+                    />
+                  </label>
                 </div>
                 
-                {images.length > 0 ? (
-                  <div className="space-y-2 mt-3">
+                {images.length > 0 && (
+                  <div className="space-y-2 mt-3 max-h-[300px] overflow-y-auto pr-2">
                     {images.map((img, index) => (
-                      <div key={index} className="flex items-center justify-between bg-muted/50 p-2 rounded-md border text-sm">
-                        <span className="truncate max-w-[200px] text-muted-foreground">{img}</span>
-                        <button type="button" onClick={() => removeImage(index)} className="text-destructive hover:opacity-80 p-1">
+                      <div key={index} className="flex items-center gap-3 bg-muted/50 p-2 rounded-md border text-sm">
+                        <img src={img} alt={`Property image ${index + 1}`} className="w-10 h-10 object-cover rounded border bg-background" />
+                        <span className="truncate flex-1 text-muted-foreground">{img}</span>
+                        <button type="button" onClick={() => removeImage(index)} className="text-destructive hover:bg-destructive/10 p-1.5 rounded-md transition-colors shrink-0">
                           <X className="h-4 w-4" />
                         </button>
                       </div>
                     ))}
-                  </div>
-                ) : (
-                  <div className="flex flex-col items-center justify-center p-6 border-2 border-dashed rounded-md bg-muted/20 text-muted-foreground">
-                    <ImageIcon className="h-8 w-8 mb-2 opacity-50" />
-                    <p className="text-xs text-center">No images added</p>
                   </div>
                 )}
               </CardContent>

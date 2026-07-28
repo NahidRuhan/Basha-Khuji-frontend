@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, Suspense } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Search, SlidersHorizontal, MapPin, Building, BedDouble, ArrowRight, Loader2 } from "lucide-react";
 
@@ -32,34 +32,49 @@ function PropertiesContent() {
   const [sortOrder, setSortOrder] = useState(searchParams.get("sortOrder") || "desc");
 
   const [page, setPage] = useState(searchParams.get("page") ? Number(searchParams.get("page")) : 1);
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(searchTerm);
   
   const { data: categoriesData } = useCategories();
   const { data: locationsData } = useLocations();
+
+  // Debounce search term
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+      setPage(1); // Reset page on search change
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
+
+  // Reset page to 1 when other filters change
+  useEffect(() => {
+    setPage(1);
+  }, [minPrice, maxPrice, categoryName, locationName, minBedrooms, minSquarefoot, maxSquarefoot, sortBy, sortOrder]);
   
   // Derived active filters object
   const activeFilters = {
-    searchTerm: searchParams.get("searchTerm") || undefined,
-    minPrice: searchParams.get("minPrice") ? Number(searchParams.get("minPrice")) : undefined,
-    maxPrice: searchParams.get("maxPrice") ? Number(searchParams.get("maxPrice")) : undefined,
-    categoryName: searchParams.get("categoryName") && searchParams.get("categoryName") !== "all" ? searchParams.get("categoryName")! : undefined,
-    locationName: searchParams.get("locationName") && searchParams.get("locationName") !== "all" ? searchParams.get("locationName")! : undefined,
-    minBedrooms: searchParams.get("minBedrooms") ? Number(searchParams.get("minBedrooms")) : undefined,
-    minSquarefoot: searchParams.get("minSquarefoot") ? Number(searchParams.get("minSquarefoot")) : undefined,
-    maxSquarefoot: searchParams.get("maxSquarefoot") ? Number(searchParams.get("maxSquarefoot")) : undefined,
-    sortBy: searchParams.get("sortBy") || "createdAt",
-    sortOrder: (searchParams.get("sortOrder") as "asc" | "desc") || "desc",
-    limit: 12, // Show more on the browse page
+    searchTerm: debouncedSearchTerm || undefined,
+    minPrice: minPrice ? Number(minPrice) : undefined,
+    maxPrice: maxPrice ? Number(maxPrice) : undefined,
+    categoryName: categoryName && categoryName !== "all" ? categoryName : undefined,
+    locationName: locationName && locationName !== "all" ? locationName : undefined,
+    minBedrooms: minBedrooms ? Number(minBedrooms) : undefined,
+    minSquarefoot: minSquarefoot ? Number(minSquarefoot) : undefined,
+    maxSquarefoot: maxSquarefoot ? Number(maxSquarefoot) : undefined,
+    sortBy: sortBy || "createdAt",
+    sortOrder: (sortOrder as "asc" | "desc") || "desc",
+    limit: 12,
     page,
   };
 
   const { data, isLoading } = useProperties(activeFilters);
   const properties = data?.data || [];
 
-  const handleApplyFilters = (e: React.FormEvent) => {
-    e.preventDefault();
+  // Sync state to URL
+  useEffect(() => {
     const params = new URLSearchParams();
     
-    if (searchTerm) params.set("searchTerm", searchTerm);
+    if (debouncedSearchTerm) params.set("searchTerm", debouncedSearchTerm);
     if (minPrice) params.set("minPrice", minPrice);
     if (maxPrice) params.set("maxPrice", maxPrice);
     if (categoryName && categoryName !== "all") params.set("categoryName", categoryName);
@@ -69,23 +84,18 @@ function PropertiesContent() {
     if (maxSquarefoot) params.set("maxSquarefoot", maxSquarefoot);
     if (sortBy && sortBy !== "createdAt") params.set("sortBy", sortBy);
     if (sortOrder && sortOrder !== "desc") params.set("sortOrder", sortOrder);
-
-    params.set("page", "1"); // Reset to page 1 on new search
+    if (page > 1) params.set("page", page.toString());
     
-    setPage(1);
-    router.push(`/properties?${params.toString()}`);
-  };
+    router.replace(`/properties?${params.toString()}`, { scroll: false });
+  }, [debouncedSearchTerm, minPrice, maxPrice, categoryName, locationName, minBedrooms, minSquarefoot, maxSquarefoot, sortBy, sortOrder, page, router]);
 
   const handlePageChange = (newPage: number) => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.set("page", newPage.toString());
     setPage(newPage);
-    router.push(`/properties?${params.toString()}`);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const FilterContent = () => (
-    <form onSubmit={handleApplyFilters} className="space-y-6">
+  const filterForm = (
+    <div className="space-y-6">
       <div className="space-y-2">
         <Label htmlFor="search">Search</Label>
         <div className="relative">
@@ -216,9 +226,7 @@ function PropertiesContent() {
           </Select>
         </div>
       </div>
-      
-      <Button type="submit" className="w-full">Apply Filters</Button>
-    </form>
+    </div>
   );
 
   return (
@@ -231,7 +239,7 @@ function PropertiesContent() {
             <SlidersHorizontal className="h-5 w-5" />
             Filters
           </h2>
-          <FilterContent />
+          {filterForm}
         </div>
       </aside>
 
@@ -255,7 +263,7 @@ function PropertiesContent() {
               <SheetHeader className="mb-6">
                 <SheetTitle>Filters</SheetTitle>
               </SheetHeader>
-              <FilterContent />
+              {filterForm}
             </SheetContent>
           </Sheet>
         </div>
