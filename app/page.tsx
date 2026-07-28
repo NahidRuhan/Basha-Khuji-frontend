@@ -1,65 +1,136 @@
-import Image from "next/image";
+"use client";
+
+import Link from "next/link";
+import { Search, MapPin, Building, ArrowRight } from "lucide-react";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { PropertyCard } from "@/components/shared/property-card";
+import { PropertyCardSkeleton } from "@/components/shared/loading-skeleton";
+import { useProperties } from "@/hooks/use-properties";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
+  const router = useRouter();
+  const [searchTerm, setSearchTerm] = useState("");
+  
+  // Fetch latest properties (limit to 6 for the home page)
+  const { data, isLoading } = useProperties({ limit: 6 });
+  const properties = data?.data || [];
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchTerm.trim()) {
+      router.push(`/properties?searchTerm=${encodeURIComponent(searchTerm)}`);
+    } else {
+      router.push(`/properties`);
+    }
+  };
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <div className="flex flex-col min-h-screen">
+      {/* Hero Section */}
+      <section className="relative w-full py-20 md:py-32 lg:py-40 bg-muted overflow-hidden">
+        {/* Background elements */}
+        <div className="absolute inset-0 z-0">
+          <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-primary/5 dark:from-primary/20 dark:to-background z-10" />
+          <div className="absolute top-0 -left-1/4 w-1/2 h-full bg-primary/5 blur-3xl rounded-full" />
+          <div className="absolute bottom-0 -right-1/4 w-1/2 h-full bg-primary/10 blur-3xl rounded-full" />
+        </div>
+        
+        <div className="container px-4 md:px-6 relative z-20 mx-auto">
+          <div className="flex flex-col items-center space-y-8 text-center max-w-3xl mx-auto">
+            <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
+              Find your perfect <span className="text-primary text-transparent bg-clip-text bg-gradient-to-r from-primary to-primary/60">Basha</span>
+            </h1>
+            <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl leading-relaxed">
+              The smartest way to find, rent, and manage properties in Bangladesh. Discover thousands of rental options tailored to your needs.
+            </p>
+            
+            {/* Search Bar */}
+            <div className="w-full max-w-2xl mx-auto mt-8 bg-background/80 backdrop-blur-xl p-2 rounded-2xl shadow-xl border border-primary/10">
+              <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-2">
+                <div className="relative flex-1 flex items-center">
+                  <Search className="absolute left-4 h-5 w-5 text-muted-foreground" />
+                  <Input 
+                    type="text" 
+                    placeholder="Search by city, neighborhood, or property name..." 
+                    className="w-full pl-12 h-14 bg-transparent border-none shadow-none focus-visible:ring-0 text-base"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                </div>
+                <Button type="submit" size="lg" className="h-14 px-8 rounded-xl shrink-0 text-base font-semibold shadow-md">
+                  Search
+                </Button>
+              </form>
+            </div>
+            
+            {/* Quick Stats/Tags */}
+            <div className="flex flex-wrap justify-center gap-4 pt-4 text-sm font-medium text-muted-foreground">
+              <div className="flex items-center gap-1.5 bg-background/50 px-4 py-2 rounded-full border">
+                <Building className="h-4 w-4 text-primary" />
+                <span>10,000+ Properties</span>
+              </div>
+              <div className="flex items-center gap-1.5 bg-background/50 px-4 py-2 rounded-full border">
+                <MapPin className="h-4 w-4 text-primary" />
+                <span>All over Bangladesh</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Featured Properties Section */}
+      <section className="py-20 container mx-auto px-4 md:px-6">
+        <div className="flex flex-col md:flex-row justify-between items-end mb-10 gap-4">
+          <div>
+            <h2 className="text-3xl font-bold tracking-tight mb-2">Featured Properties</h2>
+            <p className="text-muted-foreground">Explore the latest and most popular rentals.</p>
+          </div>
+          <Link href="/properties" className={buttonVariants({ variant: "outline", className: "group" })}>
+            View all properties
+            <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+          </Link>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+          {isLoading ? (
+            // Skeleton loaders
+            Array.from({ length: 6 }).map((_, i) => (
+              <PropertyCardSkeleton key={i} />
+            ))
+          ) : properties.length > 0 ? (
+            properties.map((property) => (
+              <PropertyCard key={property.propertyId} property={property} />
+            ))
+          ) : (
+            <div className="col-span-full py-20 text-center bg-muted/30 rounded-2xl border border-dashed">
+              <Building className="h-12 w-12 text-muted-foreground mx-auto mb-4 opacity-50" />
+              <h3 className="text-lg font-medium mb-1">No properties found</h3>
+              <p className="text-muted-foreground">Check back later for new listings.</p>
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* Call to Action for Landlords */}
+      <section className="py-24 bg-primary text-primary-foreground">
+        <div className="container mx-auto px-4 md:px-6 text-center max-w-3xl">
+          <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">Are you a Landlord?</h2>
+          <p className="text-primary-foreground/80 text-lg mb-8 leading-relaxed">
+            List your property on Basha Khuji and reach thousands of verified tenants looking for their next home.
           </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link href="/auth/register" className={buttonVariants({ size: "lg", variant: "secondary", className: "font-semibold px-8" })}>
+              List Your Property
+            </Link>
+            <Button size="lg" variant="outline" className="bg-transparent border-primary-foreground/30 hover:bg-primary-foreground/10 text-primary-foreground font-semibold">
+              Learn More
+            </Button>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-39.5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/8 px-5 transition-colors hover:border-transparent hover:bg-black/4 dark:border-white/14.5 dark:hover:bg-[#1a1a1a] md:w-39.5"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+      </section>
     </div>
   );
 }

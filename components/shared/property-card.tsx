@@ -10,12 +10,20 @@ interface PropertyCardProps {
 }
 
 export function PropertyCard({ property }: PropertyCardProps) {
+  const getValidImageUrl = (url?: string) => {
+    if (!url || typeof url !== 'string' || url.trim() === '') return null;
+    if (!url.startsWith('http') && !url.startsWith('/')) return `/${url}`;
+    return url;
+  };
+
+  const primaryImage = property.images && property.images.length > 0 ? getValidImageUrl(property.images[0]) : null;
+
   return (
     <Card className="overflow-hidden flex flex-col group h-full transition-all hover:shadow-md hover:border-primary/50">
       <div className="relative h-48 w-full overflow-hidden bg-muted">
-        {property.images && property.images.length > 0 ? (
+        {primaryImage ? (
           <Image
-            src={property.images[0]}
+            src={primaryImage}
             alt={property.propertyName}
             fill
             className="object-cover transition-transform duration-500 group-hover:scale-105"
