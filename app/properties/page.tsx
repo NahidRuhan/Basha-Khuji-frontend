@@ -11,6 +11,15 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { PropertyCard } from "@/components/shared/property-card";
 import { PropertyCardSkeleton } from "@/components/shared/loading-skeleton";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 import { useProperties } from "@/hooks/use-properties";
 import { useCategories, useLocations } from "@/hooks/use-options";
 
@@ -312,25 +321,60 @@ function PropertiesContent() {
 
         {/* Pagination Controls */}
         {data?.meta && data.meta.totalPages > 1 && (
-          <div className="flex justify-center items-center gap-2 mt-12">
-            <Button
-              variant="outline"
-              disabled={page <= 1}
-              onClick={() => handlePageChange(page - 1)}
-            >
-              Previous
-            </Button>
-            <div className="flex items-center gap-1 mx-4 text-sm font-medium">
-              Page {page} of {data.meta.totalPages}
-            </div>
-            <Button
-              variant="outline"
-              disabled={page >= data.meta.totalPages}
-              onClick={() => handlePageChange(page + 1)}
-            >
-              Next
-            </Button>
-          </div>
+          <Pagination className="mt-12">
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious
+                  onClick={() => page > 1 && handlePageChange(page - 1)}
+                  className={page <= 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                />
+              </PaginationItem>
+
+              {(() => {
+                const totalPages = data.meta.totalPages;
+                const pages: (number | "ellipsis")[] = [];
+
+                if (totalPages <= 5) {
+                  for (let i = 1; i <= totalPages; i++) pages.push(i);
+                } else {
+                  pages.push(1);
+                  if (page > 3) pages.push("ellipsis");
+                  
+                  const start = Math.max(2, page - 1);
+                  const end = Math.min(totalPages - 1, page + 1);
+                  for (let i = start; i <= end; i++) pages.push(i);
+
+                  if (page < totalPages - 2) pages.push("ellipsis");
+                  pages.push(totalPages);
+                }
+
+                return pages.map((p, idx) =>
+                  p === "ellipsis" ? (
+                    <PaginationItem key={`ellipsis-${idx}`}>
+                      <PaginationEllipsis />
+                    </PaginationItem>
+                  ) : (
+                    <PaginationItem key={p}>
+                      <PaginationLink
+                        isActive={p === page}
+                        onClick={() => handlePageChange(p)}
+                        className="cursor-pointer"
+                      >
+                        {p}
+                      </PaginationLink>
+                    </PaginationItem>
+                  )
+                );
+              })()}
+
+              <PaginationItem>
+                <PaginationNext
+                  onClick={() => page < data.meta.totalPages && handlePageChange(page + 1)}
+                  className={page >= data.meta.totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
         )}
       </main>
     </div>
