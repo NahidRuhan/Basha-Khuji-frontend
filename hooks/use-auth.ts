@@ -58,7 +58,7 @@ export const useLogin = () => {
         router.push("/dashboard/tenant");
       }
     },
-    onError: (error: any) => {
+    onError: (error: Error & { response?: { data?: { message?: string } } }) => {
       clearTokens(); // Cleanup just in case
       const message = error.response?.data?.message || "Failed to login. Please check your credentials.";
       toast.error(message);
@@ -72,6 +72,7 @@ export const useRegister = () => {
   return useMutation({
     mutationFn: async (data: RegisterValues) => {
       // Remove confirmPassword before sending to API
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { confirmPassword, ...registerData } = data;
       const response = await api.post<ApiResponse<User>>("/api/user/register", registerData);
       return response.data;
@@ -80,7 +81,7 @@ export const useRegister = () => {
       toast.success(data.message || "Account created successfully! Please login.");
       router.push("/auth/login");
     },
-    onError: (error: any) => {
+    onError: (error: Error & { response?: { data?: { message?: string } } }) => {
       const message = error.response?.data?.message || "Failed to register. Please try again.";
       toast.error(message);
     },

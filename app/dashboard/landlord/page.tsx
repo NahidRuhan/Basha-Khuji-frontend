@@ -1,7 +1,7 @@
 "use client";
 
 import { useAuthStore } from "@/store/auth-store";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { buttonVariants } from "@/components/ui/button";
 import Link from "next/link";
 import { Building, ClipboardList, PlusCircle, ArrowRight } from "lucide-react";

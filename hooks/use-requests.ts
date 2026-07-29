@@ -39,7 +39,7 @@ export const useCreateRequest = () => {
       queryClient.invalidateQueries({ queryKey: ["my-requests"] });
       router.push("/dashboard/tenant/requests");
     },
-    onError: (error: any) => {
+    onError: (error: Error & { response?: { data?: { message?: string } } }) => {
       toast.error(error.response?.data?.message || "Failed to submit request.");
     },
   });
@@ -61,7 +61,7 @@ export const useInitiatePayment = () => {
         window.location.href = data.data.checkoutUrl;
       }
     },
-    onError: (error: any) => {
+    onError: (error: Error & { response?: { data?: { message?: string } } }) => {
       toast.error(error.response?.data?.message || "Failed to initiate payment.");
     },
   });
@@ -89,7 +89,7 @@ export const useUpdateLandlordRequest = () => {
       toast.success(data.message || "Request updated successfully!");
       queryClient.invalidateQueries({ queryKey: ["landlord-requests"] });
     },
-    onError: (error: any) => {
+    onError: (error: Error & { response?: { data?: { message?: string } } }) => {
       toast.error(error.response?.data?.message || "Failed to update request.");
     },
   });
@@ -100,14 +100,14 @@ export const useCreateReview = () => {
 
   return useMutation({
     mutationFn: async (data: { requestId: string; rating: number; review: string }) => {
-      const response = await api.post<ApiResponse<any>>("/api/reviews", data);
+      const response = await api.post<ApiResponse<unknown>>("/api/reviews", data);
       return response.data;
     },
     onSuccess: (data) => {
       toast.success(data.message || "Review submitted successfully!");
       queryClient.invalidateQueries({ queryKey: ["my-requests"] });
     },
-    onError: (error: any) => {
+    onError: (error: Error & { response?: { data?: { message?: string } } }) => {
       toast.error(error.response?.data?.message || "Failed to submit review.");
     },
   });

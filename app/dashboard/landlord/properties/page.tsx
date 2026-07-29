@@ -1,7 +1,7 @@
 "use client";
 
 import { useMyProperties, useDeleteProperty } from "@/hooks/use-properties";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Loader2, Building, MapPin, Edit, Trash2, Plus, AlertTriangle } from "lucide-react";
@@ -62,7 +62,7 @@ export default function LandlordPropertiesPage() {
           <Building className="h-12 w-12 text-muted-foreground mb-4 opacity-50" />
           <CardTitle className="mb-2">No Properties Found</CardTitle>
           <CardDescription className="max-w-md mx-auto mb-6">
-            You haven't added any properties yet. Create your first listing to start receiving rental requests.
+            You haven&apos;t added any properties yet. Create your first listing to start receiving rental requests.
           </CardDescription>
           <Link href="/dashboard/landlord/properties/new" className={buttonVariants()}>
             <Plus className="h-4 w-4 mr-2" /> Add Your First Property
@@ -99,7 +99,7 @@ export default function LandlordPropertiesPage() {
                 <CardContent className="p-4 flex-1">
                   <h3 className="font-semibold text-lg line-clamp-1 mb-1">{property.propertyName}</h3>
                   <div className="flex items-start text-sm text-muted-foreground mb-4 h-10">
-                    <MapPin className="h-4 w-4 mr-1 flex-shrink-0 mt-0.5" />
+                    <MapPin className="h-4 w-4 mr-1 shrink-0 mt-0.5" />
                     <span className="line-clamp-2">{property.address}</span>
                   </div>
                   

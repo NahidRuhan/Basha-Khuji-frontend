@@ -52,7 +52,7 @@ export default function PaymentInitiationPage({ params }: { params: Promise<{ id
     return (
       <div className="flex flex-col items-center justify-center min-h-[50vh] text-center max-w-md mx-auto space-y-4">
         <h2 className="text-2xl font-bold">Request Not Found</h2>
-        <p className="text-muted-foreground">The rental request you are trying to pay for could not be found or you don't have access to it.</p>
+        <p className="text-muted-foreground">The rental request you are trying to pay for could not be found or you don&apos;t have access to it.</p>
         <Button onClick={() => router.push("/dashboard/tenant/requests")}>
           Back to Requests
         </Button>
@@ -106,7 +106,7 @@ export default function PaymentInitiationPage({ params }: { params: Promise<{ id
             <CardContent className="space-y-6">
               <div className="flex flex-col sm:flex-row gap-4">
                 {propertyImage ? (
-                  <div className="relative w-full sm:w-32 h-24 rounded-md overflow-hidden flex-shrink-0">
+                  <div className="relative w-full sm:w-32 h-24 rounded-md overflow-hidden shrink-0">
                     <Image 
                       src={propertyImage} 
                       alt={property.propertyName} 
@@ -116,7 +116,7 @@ export default function PaymentInitiationPage({ params }: { params: Promise<{ id
                     />
                   </div>
                 ) : (
-                  <div className="w-full sm:w-32 h-24 bg-muted rounded-md flex items-center justify-center flex-shrink-0">
+                  <div className="w-full sm:w-32 h-24 bg-muted rounded-md flex items-center justify-center shrink-0">
                     <Building className="h-8 w-8 text-muted-foreground/30" />
                   </div>
                 )}
@@ -159,7 +159,7 @@ export default function PaymentInitiationPage({ params }: { params: Promise<{ id
               <div className="bg-muted/30 p-4 rounded-lg">
                 <h4 className="text-sm font-semibold mb-2">Your Message to Landlord</h4>
                 <p className="text-sm text-muted-foreground italic">
-                  "{request.message}"
+                  &quot;{request.message}&quot;
                 </p>
               </div>
             </CardContent>
@@ -167,7 +167,7 @@ export default function PaymentInitiationPage({ params }: { params: Promise<{ id
 
           <Card className="border-emerald-500/20 shadow-sm">
             <CardContent className="p-4 flex items-start gap-3">
-              <ShieldCheck className="h-5 w-5 text-emerald-500 flex-shrink-0 mt-0.5" />
+              <ShieldCheck className="h-5 w-5 text-emerald-500 shrink-0 mt-0.5" />
               <div className="text-sm">
                 <p className="font-medium text-emerald-700 mb-1">Secure Payment with Stripe</p>
                 <p className="text-muted-foreground">Your payment is processed securely. Basha Khuji does not store your payment information. You can request a refund if the landlord cancels the agreement before move-in.</p>
@@ -203,9 +203,9 @@ export default function PaymentInitiationPage({ params }: { params: Promise<{ id
                 <span className="font-bold text-2xl text-primary">{formatCurrency(property.price * 2)}</span>
               </div>
               
-              <div className="flex items-start gap-2 text-xs text-muted-foreground mt-2 bg-blue-50/50 p-2 rounded text-blue-800">
-                <Info className="h-3.5 w-3.5 flex-shrink-0 mt-0.5" />
-                <p>Total includes first month's rent and 1-month equivalent security deposit.</p>
+              <div className="flex items-start gap-2 text-xs mt-2 bg-blue-50/50 p-2 rounded text-blue-800">
+                <Info className="h-3.5 w-3.5 shrink-0 mt-0.5" />
+                <p>Total includes first month&apos;s rent and 1-month equivalent security deposit.</p>
               </div>
             </CardContent>
             <CardFooter className="pt-2">

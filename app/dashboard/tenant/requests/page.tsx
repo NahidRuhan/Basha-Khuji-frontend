@@ -3,7 +3,7 @@
 import { useMyRequests } from "@/hooks/use-requests";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { Loader2, Calendar, MapPin, Building, CreditCard, Star } from "lucide-react";
 import Link from "next/link";
 import { format } from "date-fns";
@@ -43,7 +43,7 @@ export default function TenantRequestsPage() {
           <Building className="h-12 w-12 text-muted-foreground mb-4 opacity-50" />
           <CardTitle className="mb-2">No Requests Found</CardTitle>
           <CardDescription className="max-w-md mx-auto mb-6">
-            You haven't requested to rent any properties yet. Browse our listings and find your next home.
+            You haven&apos;t requested to rent any properties yet. Browse our listings and find your next home.
           </CardDescription>
           <Link href="/properties" className={buttonVariants()}>Browse Properties</Link>
         </Card>
@@ -69,7 +69,7 @@ export default function TenantRequestsPage() {
               </CardHeader>
               <CardContent className="flex-1 space-y-4">
                 <div className="bg-muted/40 p-4 rounded-lg text-sm italic border">
-                  "{request.message}"
+                  &quot;{request.message}&quot;
                 </div>
                 
                 {request.review && (
@@ -80,7 +80,7 @@ export default function TenantRequestsPage() {
                         <Star key={i} className={`h-3.5 w-3.5 ${i < request.review!.rating ? "fill-amber-400 text-amber-400" : "text-gray-300"}`} />
                       ))}
                     </div>
-                    <p className="text-sm italic text-amber-900/80">"{request.review.review}"</p>
+                    <p className="text-sm italic text-amber-900/80">&quot;{request.review.review}&quot;</p>
                   </div>
                 )}
                 

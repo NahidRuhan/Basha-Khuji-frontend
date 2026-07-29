@@ -1,10 +1,10 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { Loader2, Receipt, Building, Calendar, CreditCard, ExternalLink } from "lucide-react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import { Loader2, Receipt, Building, Calendar, CreditCard } from "lucide-react";
+import { Card, CardDescription, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { format } from "date-fns";
 import api from "@/lib/api";
 import { Payment, PaginatedResponse } from "@/types";
@@ -50,7 +50,7 @@ export default function TenantPaymentsPage() {
           <Receipt className="h-12 w-12 text-muted-foreground mb-4 opacity-50" />
           <CardTitle className="mb-2">No Payments Found</CardTitle>
           <CardDescription className="max-w-md mx-auto mb-6">
-            You don't have any payment history yet. Payments will appear here once you rent a property.
+            You don&apos;t have any payment history yet. Payments will appear here once you rent a property.
           </CardDescription>
           <Link href="/dashboard/tenant/requests" className={buttonVariants({ variant: "outline" })}>View My Requests</Link>
         </Card>

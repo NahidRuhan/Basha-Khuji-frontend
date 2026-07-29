@@ -1,10 +1,10 @@
 "use client";
 
 import { useLandlordRequests, useUpdateLandlordRequest } from "@/hooks/use-requests";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import { Card, CardDescription, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Button, buttonVariants } from "@/components/ui/button";
-import { Loader2, ClipboardList, CheckCircle2, XCircle, Clock, Building, User, Phone, Mail, Star } from "lucide-react";
+import { buttonVariants } from "@/components/ui/button";
+import { Loader2, ClipboardList, CheckCircle2, XCircle, Clock, Phone, Mail, Star } from "lucide-react";
 import Link from "next/link";
 import { format } from "date-fns";
 import { 
@@ -14,20 +14,13 @@ import {
   SelectTrigger, 
   SelectValue 
 } from "@/components/ui/select";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useState } from "react";
 
 export default function LandlordRequestsPage() {
   const { data, isLoading } = useLandlordRequests();
-  const { mutate: updateRequest, isPending: isUpdating } = useUpdateLandlordRequest();
+  const { mutate: updateRequest } = useUpdateLandlordRequest();
   
   const [updatingId, setUpdatingId] = useState<string | null>(null);
 
@@ -79,7 +72,7 @@ export default function LandlordRequestsPage() {
           <ClipboardList className="h-12 w-12 text-muted-foreground mb-4 opacity-50" />
           <CardTitle className="mb-2">No Requests Found</CardTitle>
           <CardDescription className="max-w-md mx-auto mb-6">
-            You don't have any rental requests yet. They will appear here when tenants apply for your properties.
+            You don&apos;t have any rental requests yet. They will appear here when tenants apply for your properties.
           </CardDescription>
           <Link href="/dashboard/landlord/properties" className={buttonVariants({ variant: "outline" })}>
             View My Properties
@@ -147,7 +140,7 @@ export default function LandlordRequestsPage() {
                       <ClipboardList className="h-4 w-4 text-muted-foreground" /> Message from Applicant:
                     </div>
                     <p className="whitespace-pre-wrap text-muted-foreground mt-2 italic border-l-2 border-primary/20 pl-3">
-                      "{request.message}"
+                      &quot;{request.message}&quot;
                     </p>
                   </div>
                   
@@ -162,7 +155,7 @@ export default function LandlordRequestsPage() {
                         </div>
                       </div>
                       <p className="whitespace-pre-wrap text-amber-900/80 mt-2 italic border-l-2 border-amber-400/50 pl-3">
-                        "{request.review.review}"
+                        &quot;{request.review.review}&quot;
                       </p>
                     </div>
                   )}
@@ -175,7 +168,7 @@ export default function LandlordRequestsPage() {
                         onValueChange={(val) => handleStatusUpdate(request.requestId, val)}
                         disabled={updatingId === request.requestId || request.status === "COMPLETED"}
                       >
-                        <SelectTrigger className="w-[180px]">
+                        <SelectTrigger className="w-45">
                           <SelectValue placeholder="Change Status" />
                         </SelectTrigger>
                         <SelectContent>

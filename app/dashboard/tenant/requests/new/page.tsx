@@ -102,7 +102,7 @@ function NewRequestForm() {
             <CardContent className="p-4">
               <h3 className="font-semibold line-clamp-2 mb-1">{property.propertyName}</h3>
               <div className="flex items-start text-xs text-muted-foreground mb-4">
-                <MapPin className="h-3.5 w-3.5 mr-1 flex-shrink-0 mt-0.5" />
+                <MapPin className="h-3.5 w-3.5 mr-1 shrink-0 mt-0.5" />
                 <span className="line-clamp-2">{property.address}</span>
               </div>
               <div className="font-bold text-lg text-primary">

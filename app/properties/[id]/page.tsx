@@ -38,7 +38,7 @@ export default function PropertyDetailsPage({ params }: { params: Promise<{ id: 
       <div className="container mx-auto px-4 py-12 min-h-screen">
         <div className="animate-pulse space-y-8">
           <div className="h-10 bg-muted rounded w-1/4"></div>
-          <div className="h-[400px] bg-muted rounded-xl w-full"></div>
+          <div className="h-100 bg-muted rounded-xl w-full"></div>
           <div className="grid md:grid-cols-3 gap-8">
             <div className="md:col-span-2 space-y-4">
               <div className="h-8 bg-muted rounded w-1/3"></div>
@@ -119,7 +119,7 @@ export default function PropertyDetailsPage({ params }: { params: Promise<{ id: 
         </div>
 
         {/* Image Gallery */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-12 h-[400px] md:h-[500px]">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-12 h-100 md:h-125">
           <div className="md:col-span-3 relative rounded-2xl overflow-hidden shadow-sm h-full group">
             <Image
               src={primaryImage}

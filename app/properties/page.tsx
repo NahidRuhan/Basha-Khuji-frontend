@@ -2,7 +2,7 @@
 
 import { useState, useEffect, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { Search, SlidersHorizontal, MapPin, Building, BedDouble, ArrowRight, Loader2 } from "lucide-react";
+import { Search, SlidersHorizontal, Loader2 } from "lucide-react";
 
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -56,9 +56,13 @@ function PropertiesContent() {
   }, [searchTerm]);
 
   // Reset page to 1 when other filters change
-  useEffect(() => {
+  const currentFiltersKey = [minPrice, maxPrice, categoryName, locationName, minBedrooms, minSquarefoot, maxSquarefoot, sortBy, sortOrder].join("|");
+  const [prevFiltersKey, setPrevFiltersKey] = useState(currentFiltersKey);
+
+  if (currentFiltersKey !== prevFiltersKey) {
+    setPrevFiltersKey(currentFiltersKey);
     setPage(1);
-  }, [minPrice, maxPrice, categoryName, locationName, minBedrooms, minSquarefoot, maxSquarefoot, sortBy, sortOrder]);
+  }
   
   // Derived active filters object
   const activeFilters = {
@@ -298,7 +302,7 @@ function PropertiesContent() {
               <SlidersHorizontal className="h-4 w-4" />
               Filters
             </SheetTrigger>
-            <SheetContent side="left" className="w-[300px] sm:w-[400px]">
+            <SheetContent side="left" className="w-75 sm:w-100">
               <SheetHeader className="mb-6">
                 <SheetTitle>Filters</SheetTitle>
               </SheetHeader>
@@ -324,7 +328,7 @@ function PropertiesContent() {
               </div>
               <h3 className="text-xl font-semibold mb-2">No properties found</h3>
               <p className="text-muted-foreground max-w-md">
-                We couldn't find any properties matching your current filters. Try adjusting your search criteria.
+                We couldn&apos;t find any properties matching your current filters. Try adjusting your search criteria.
               </p>
               <Button 
                 variant="outline" 

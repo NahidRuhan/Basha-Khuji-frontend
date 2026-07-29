@@ -67,15 +67,15 @@ export function Footer() {
             <h3 className="font-semibold text-lg tracking-tight">Contact Us</h3>
             <ul className="space-y-3 text-sm">
               <li className="flex items-start gap-3 text-muted-foreground">
-                <MapPin className="h-4 w-4 mt-0.5 flex-shrink-0 text-primary" />
+                <MapPin className="h-4 w-4 mt-0.5 shrink-0 text-primary" />
                 <span>Level 2, Banani Road 11,<br />Dhaka, Bangladesh</span>
               </li>
               <li className="flex items-center gap-3 text-muted-foreground">
-                <Phone className="h-4 w-4 flex-shrink-0 text-primary" />
+                <Phone className="h-4 w-4 shrink-0 text-primary" />
                 <span>+880 1234 567890</span>
               </li>
               <li className="flex items-center gap-3 text-muted-foreground">
-                <Mail className="h-4 w-4 flex-shrink-0 text-primary" />
+                <Mail className="h-4 w-4 shrink-0 text-primary" />
                 <span>support@bashakhuji.com</span>
               </li>
             </ul>

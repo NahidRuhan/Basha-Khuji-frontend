@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useCreateProperty } from "@/hooks/use-properties";
 import { useCategories, useLocations } from "@/hooks/use-options";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -12,7 +12,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Loader2, ArrowLeft, Image as ImageIcon, X } from "lucide-react";
 import Link from "next/link";
-import { format } from "date-fns";
+import Image from "next/image";
 import { toast } from "sonner";
 import { uploadImageToImgBB } from "@/lib/imgbb";
 
@@ -324,10 +324,10 @@ export default function NewPropertyPage() {
                 </div>
                 
                 {images.length > 0 && (
-                  <div className="space-y-2 mt-3 max-h-[300px] overflow-y-auto pr-2">
+                  <div className="space-y-2 mt-3 max-h-75 overflow-y-auto pr-2">
                     {images.map((img, index) => (
                       <div key={index} className="flex items-center gap-3 bg-muted/50 p-2 rounded-md border text-sm">
-                        <img src={img} alt={`Property image ${index + 1}`} className="w-10 h-10 object-cover rounded border bg-background" />
+                        <Image src={img} alt={`Property image ${index + 1}`} width={40} height={40} className="w-10 h-10 object-cover rounded border bg-background" />
                         <span className="truncate flex-1 text-muted-foreground">{img}</span>
                         <button type="button" onClick={() => removeImage(index)} className="text-destructive hover:bg-destructive/10 p-1.5 rounded-md transition-colors shrink-0">
                           <X className="h-4 w-4" />

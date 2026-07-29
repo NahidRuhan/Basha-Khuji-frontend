@@ -7,7 +7,7 @@ export function PropertyCardSkeleton() {
       <div className="relative h-48 w-full">
         <Skeleton className="h-full w-full rounded-none" />
       </div>
-      <CardContent className="p-4 flex-grow space-y-4">
+      <CardContent className="p-4 grow space-y-4">
         <div className="space-y-2">
           <Skeleton className="h-5 w-2/3" />
           <Skeleton className="h-4 w-1/2" />

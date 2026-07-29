@@ -42,7 +42,7 @@ export default function Home() {
             className="object-cover opacity-30 dark:opacity-20" 
             priority
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-primary/5 dark:from-primary/20 dark:to-background z-10" />
+          <div className="absolute inset-0 bg-linear-to-r from-primary/10 to-primary/5 dark:from-primary/20 dark:to-background z-10" />
           <div className="absolute top-0 -left-1/4 w-1/2 h-full bg-primary/5 blur-3xl rounded-full z-10" />
           <div className="absolute bottom-0 -right-1/4 w-1/2 h-full bg-primary/10 blur-3xl rounded-full z-10" />
         </div>
@@ -50,9 +50,9 @@ export default function Home() {
         <div className="container px-4 md:px-6 relative z-20 mx-auto">
           <div className="flex flex-col items-center space-y-8 text-center max-w-3xl mx-auto">
             <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
-              Find your perfect <span className="text-primary text-transparent bg-clip-text bg-gradient-to-r from-primary to-primary/60">Basha</span>
+              Find your perfect <span className="text-transparent bg-clip-text bg-linear-to-r from-primary to-primary/60">Basha</span>
             </h1>
-            <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl leading-relaxed">
+            <p className="mx-auto max-w-175 text-muted-foreground md:text-xl leading-relaxed">
               The smartest way to find, rent, and manage properties in Bangladesh. Discover thousands of rental options tailored to your needs.
             </p>
             

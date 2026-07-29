@@ -9,7 +9,6 @@ import {
   Users, 
   ClipboardList, 
   Tags,
-  MapPin,
   LogOut 
 } from "lucide-react";
 import { useLogout } from "@/hooks/use-auth";

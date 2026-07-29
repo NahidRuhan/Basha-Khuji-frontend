@@ -1,8 +1,8 @@
 "use client";
 
 import { useAuthStore } from "@/store/auth-store";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { buttonVariants } from "@/components/ui/button";
 import Link from "next/link";
 import { ArrowRight, Building, FileText, CreditCard } from "lucide-react";
 

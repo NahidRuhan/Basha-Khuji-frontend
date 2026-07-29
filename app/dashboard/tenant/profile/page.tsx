@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useAuthStore } from "@/store/auth-store";
+import Image from "next/image";
 import { useUpdateProfile } from "@/hooks/use-profile";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -16,15 +17,17 @@ export default function TenantProfilePage() {
   const { mutate: updateProfile, isPending } = useUpdateProfile();
 
   const [formData, setFormData] = useState({
-    userName: "",
-    phoneNumber: "",
-    occupation: "",
-    address: "",
-    profileImage: "",
+    userName: user?.userName || "",
+    phoneNumber: user?.phoneNumber || "",
+    occupation: user?.occupation || "",
+    address: user?.address || "",
+    profileImage: user?.profileImage || "",
   });
+  const [prevUser, setPrevUser] = useState(user);
   const [isUploading, setIsUploading] = useState(false);
 
-  useEffect(() => {
+  if (user !== prevUser) {
+    setPrevUser(user);
     if (user) {
       setFormData({
         userName: user.userName || "",
@@ -34,7 +37,7 @@ export default function TenantProfilePage() {
         profileImage: user.profileImage || "",
       });
     }
-  }, [user]);
+  }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData(prev => ({ ...prev, [e.target.id]: e.target.value }));
@@ -81,7 +84,7 @@ export default function TenantProfilePage() {
             <div className="flex items-center gap-6 pb-6 border-b">
               <div className="h-24 w-24 rounded-full bg-muted flex flex-col items-center justify-center border relative overflow-hidden group">
                 {formData.profileImage ? (
-                  <img src={formData.profileImage} alt="Profile" className="h-full w-full object-cover" />
+                  <Image src={formData.profileImage} alt="Profile" fill className="object-cover" sizes="96px" />
                 ) : (
                   <UserCircle className="h-12 w-12 text-muted-foreground" />
                 )}

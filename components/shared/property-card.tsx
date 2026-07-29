@@ -49,7 +49,7 @@ export function PropertyCard({ property }: PropertyCardProps) {
         </div>
       </div>
       
-      <CardContent className="p-4 flex-grow flex flex-col">
+      <CardContent className="p-4 grow flex flex-col">
         <div className="flex items-start justify-between gap-2 mb-2">
           <Link href={`/properties/${property.propertyId}`} className="hover:underline">
             <h3 className="font-semibold text-lg line-clamp-1" title={property.propertyName}>
@@ -63,7 +63,7 @@ export function PropertyCard({ property }: PropertyCardProps) {
         </div>
         
         <div className="flex items-center text-sm text-muted-foreground mb-4">
-          <MapPin className="h-3.5 w-3.5 mr-1 flex-shrink-0" />
+          <MapPin className="h-3.5 w-3.5 mr-1 shrink-0" />
           <span className="line-clamp-1" title={property.address}>
             {property.location?.locationName ? `${property.address}, ${property.location.locationName}` : property.address}
           </span>

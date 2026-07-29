@@ -73,7 +73,7 @@ export const useCreateProperty = () => {
       toast.success("Property created successfully!");
       queryClient.invalidateQueries({ queryKey: ["my-properties"] });
     },
-    onError: (error: any) => {
+    onError: (error: Error & { response?: { data?: { message?: string } } }) => {
       toast.error(error.response?.data?.message || "Failed to create property.");
     },
   });
@@ -92,7 +92,7 @@ export const useUpdateProperty = () => {
       queryClient.invalidateQueries({ queryKey: ["my-properties"] });
       queryClient.invalidateQueries({ queryKey: ["property", data.data?.propertyId] });
     },
-    onError: (error: any) => {
+    onError: (error: Error & { response?: { data?: { message?: string } } }) => {
       toast.error(error.response?.data?.message || "Failed to update property.");
     },
   });
@@ -111,7 +111,7 @@ export const useDeleteProperty = () => {
       queryClient.invalidateQueries({ queryKey: ["my-properties"] });
       queryClient.invalidateQueries({ queryKey: ["properties"] });
     },
-    onError: (error: any) => {
+    onError: (error: Error & { response?: { data?: { message?: string } } }) => {
       toast.error(error.response?.data?.message || "Failed to delete property.");
     },
   });

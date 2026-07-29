@@ -19,7 +19,7 @@ export const useUpdateProfile = () => {
       }
       queryClient.invalidateQueries({ queryKey: ["me"] });
     },
-    onError: (error: any) => {
+    onError: (error: Error & { response?: { data?: { message?: string } } }) => {
       toast.error(error.response?.data?.message || "Failed to update profile.");
     },
   });
