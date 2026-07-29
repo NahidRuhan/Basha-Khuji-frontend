@@ -22,7 +22,7 @@ export function proxy(request: NextRequest) {
 
   // If user is trying to access protected paths and is NOT logged in
   if (isDashboardPath && !token) {
-    const url = new URL("/auth/login", request.url);
+    const url = new URL("/login", request.url);
     url.searchParams.set("callbackUrl", path);
     return NextResponse.redirect(url);
   }

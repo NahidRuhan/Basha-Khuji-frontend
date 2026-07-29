@@ -131,7 +131,7 @@ export default function Home() {
             List your property on Basha Khuji and reach thousands of verified tenants looking for their next home.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/auth/register" className={buttonVariants({ size: "lg", variant: "secondary", className: "font-semibold px-8" })}>
+            <Link href="/register" className={buttonVariants({ size: "lg", variant: "secondary", className: "font-semibold px-8" })}>
               List Your Property
             </Link>
             <Button size="lg" variant="outline" className="bg-transparent border-primary-foreground/30 hover:bg-primary-foreground/10 text-primary-foreground font-semibold">

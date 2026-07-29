@@ -20,7 +20,7 @@ We have successfully integrated the following routes from the backend API:
 
 ### Auth & Users
 - `POST /api/user/register` - Create new Tenant/Landlord
-- `POST /api/auth/login` - Authenticate
+- `POST /api/login` - Authenticate
 - `POST /api/auth/refresh-token` - Refresh session
 - `POST /api/auth/logout` - Clear session
 - `GET /api/auth/me` - Get current user profile

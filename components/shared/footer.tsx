@@ -35,10 +35,10 @@ export function Footer() {
                 <Link href="/properties" className="text-muted-foreground hover:text-primary transition-colors">Browse Properties</Link>
               </li>
               <li>
-                <Link href="/auth/register" className="text-muted-foreground hover:text-primary transition-colors">List Your Property</Link>
+                <Link href="/register" className="text-muted-foreground hover:text-primary transition-colors">List Your Property</Link>
               </li>
               <li>
-                <Link href="/auth/login" className="text-muted-foreground hover:text-primary transition-colors">Sign In</Link>
+                <Link href="/login" className="text-muted-foreground hover:text-primary transition-colors">Sign In</Link>
               </li>
             </ul>
           </div>

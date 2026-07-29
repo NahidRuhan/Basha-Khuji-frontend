@@ -64,7 +64,7 @@ export default function LoginPage() {
               <div className="flex items-center justify-between">
                 <Label htmlFor="password">Password</Label>
                 <Link 
-                  href="/auth/forgot-password" 
+                  href="/forgot-password" 
                   className="text-sm font-medium text-primary hover:underline underline-offset-4"
                   tabIndex={-1}
                 >
@@ -114,7 +114,7 @@ export default function LoginPage() {
         <CardFooter className="flex justify-center border-t p-6 bg-muted/20">
           <p className="text-sm text-muted-foreground">
             Don&apos;t have an account?{" "}
-            <Link href="/auth/register" className="font-semibold text-primary hover:underline underline-offset-4">
+            <Link href="/register" className="font-semibold text-primary hover:underline underline-offset-4">
               Sign up
             </Link>
           </p>

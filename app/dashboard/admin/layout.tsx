@@ -17,7 +17,7 @@ export default function AdminDashboardLayout({
 
   useEffect(() => {
     if (!isLoading && (!isAuthenticated || user?.role !== UserRole.ADMIN)) {
-      router.push("/auth/login");
+      router.push("/login");
     }
   }, [isAuthenticated, user, isLoading, router]);
 

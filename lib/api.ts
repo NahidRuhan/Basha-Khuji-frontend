@@ -65,7 +65,7 @@ api.interceptors.response.use(
         clearTokens();
         // Optionally redirect to login or let the app handle it via state
         if (typeof window !== "undefined") {
-          window.location.href = "/auth/login";
+          window.location.href = "/login";
         }
         return Promise.reject(refreshError);
       }

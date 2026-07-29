@@ -19,7 +19,7 @@ export const useLogin = () => {
         success: boolean;
         message: string;
         data: { accessToken: string; refreshToken?: string };
-      }>("/api/auth/login", data);
+      }>("/api/login", data);
       
       const tokens = loginResponse.data.data;
       
@@ -79,7 +79,7 @@ export const useRegister = () => {
     },
     onSuccess: (data) => {
       toast.success(data.message || "Account created successfully! Please login.");
-      router.push("/auth/login");
+      router.push("/login");
     },
     onError: (error: Error & { response?: { data?: { message?: string } } }) => {
       const message = error.response?.data?.message || "Failed to register. Please try again.";
@@ -103,14 +103,14 @@ export const useLogout = () => {
       clearUser();
       queryClient.clear();
       toast.success("Logged out successfully");
-      router.push("/auth/login");
+      router.push("/login");
     },
     onError: () => {
       // Even if API fails, clear local state
       clearTokens();
       clearUser();
       queryClient.clear();
-      router.push("/auth/login");
+      router.push("/login");
     },
   });
 };

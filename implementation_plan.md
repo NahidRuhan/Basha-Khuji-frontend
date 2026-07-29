@@ -154,13 +154,13 @@ Components to install: `button`, `input`, `label`, `select`, `dialog`, `card`, `
 #### [NEW] `app/auth/layout.tsx`
 Split layout — decorative brand panel on left, form on right (desktop), stacked on mobile
 
-#### [NEW] `app/auth/login/page.tsx`
+#### [NEW] `app/login/page.tsx`
 - Email + password fields with `react-hook-form` + `loginSchema`
 - Inline Zod error messages
 - Toast on success/failure
 - "Don't have an account?" link → register
 
-#### [NEW] `app/auth/register/page.tsx`
+#### [NEW] `app/register/page.tsx`
 - Name, email, password, confirm password fields
 - **Role selection** via visual card toggle (Tenant vs Landlord)
 - `registerSchema` Zod validation
@@ -174,7 +174,7 @@ Next.js Middleware for route protection:
   - `/dashboard/tenant/*` → role must be `TENANT`
   - `/dashboard/landlord/*` → role must be `LANDLORD`
   - `/dashboard/admin/*` → role must be `ADMIN`
-- Unauthenticated → redirect to `/auth/login`
+- Unauthenticated → redirect to `/login`
 - Authenticated users on `/auth/*` → redirect to their dashboard
 
 ---
@@ -380,7 +380,7 @@ Mapping document (mandatory requirement):
 | Property browse | `/api/properties` | GET |
 | Property details | `/api/properties/:id` | GET |
 | Category filter | `/api/properties/category` | GET |
-| Login form | `/api/auth/login` | POST |
+| Login form | `/api/login` | POST |
 | Register form | `/api/user/register` | POST |
 | Auth check | `/api/auth/me` | GET |
 | Token refresh | `/api/auth/refresh-token` | POST |

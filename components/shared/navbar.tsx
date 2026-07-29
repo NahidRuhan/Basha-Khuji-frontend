@@ -40,7 +40,7 @@ export function Navbar() {
   };
 
   const getDashboardLink = () => {
-    if (!user) return "/auth/login";
+    if (!user) return "/login";
     if (user.role === UserRole.ADMIN) return "/dashboard/admin";
     if (user.role === UserRole.LANDLORD) return "/dashboard/landlord";
     return "/dashboard/tenant";
@@ -155,10 +155,10 @@ export function Navbar() {
             </DropdownMenu>
           ) : (
             <div className="hidden md:flex items-center gap-2">
-              <Link href="/auth/login" className={buttonVariants({ variant: "ghost" })}>
+              <Link href="/login" className={buttonVariants({ variant: "ghost" })}>
                 Log in
               </Link>
-              <Link href="/auth/register" className={buttonVariants({ variant: "default" })}>
+              <Link href="/register" className={buttonVariants({ variant: "default" })}>
                 Sign up
               </Link>
             </div>
@@ -220,10 +220,10 @@ export function Navbar() {
 
                 {!isAuthenticated && (
                   <div className="flex flex-col gap-2 mt-4 border-t pt-4">
-                    <Link href="/auth/login" className={buttonVariants({ variant: "outline", className: "w-full justify-start" })}>
+                    <Link href="/login" className={buttonVariants({ variant: "outline", className: "w-full justify-start" })}>
                       Log in
                     </Link>
-                    <Link href="/auth/register" className={buttonVariants({ variant: "default", className: "w-full justify-start" })}>
+                    <Link href="/register" className={buttonVariants({ variant: "default", className: "w-full justify-start" })}>
                       Sign up
                     </Link>
                   </div>

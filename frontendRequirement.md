@@ -172,8 +172,8 @@ RentNest is a modern, responsive **Next.js application** for a rental property m
 | `/` | Home page with featured properties | `GET /api/properties` |
 | `/properties` | Browse & filter properties | `GET /api/properties`, `GET /api/categories` |
 | `/properties/[id]` | Property details & request CTA | `GET /api/properties/:id` |
-| `/auth/register` | Role selection & registration form | `POST /api/auth/register` |
-| `/auth/login` | Login form | `POST /api/auth/login` |
+| `/register` | Role selection & registration form | `POST /api/register` |
+| `/login` | Login form | `POST /api/login` |
 | `/dashboard/tenant` | Tenant overview & request history | `GET /api/rentals`, `GET /api/payments` |
 | `/dashboard/tenant/requests/[id]/pay` | Payment initiation page | `POST /api/payments/create` |
 | `/payment/success` & `/payment/cancel` | Payment outcome pages | (Updates UI based on URL params/session) |

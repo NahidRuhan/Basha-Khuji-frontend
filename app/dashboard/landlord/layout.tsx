@@ -17,7 +17,7 @@ export default function LandlordDashboardLayout({
 
   useEffect(() => {
     if (!isLoading && (!isAuthenticated || user?.role !== UserRole.LANDLORD)) {
-      router.push("/auth/login");
+      router.push("/login");
     }
   }, [isAuthenticated, user, isLoading, router]);
 

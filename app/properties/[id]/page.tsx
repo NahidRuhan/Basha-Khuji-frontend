@@ -75,7 +75,7 @@ export default function PropertyDetailsPage({ params }: { params: Promise<{ id: 
 
   const handleRentRequest = () => {
     if (!isAuthenticated) {
-      router.push(`/auth/login?callbackUrl=/properties/${id}`);
+      router.push(`/login?callbackUrl=/properties/${id}`);
       return;
     }
     // In Phase 6, this will open a modal to submit a rental request
