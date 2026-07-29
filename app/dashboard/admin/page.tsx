@@ -1,24 +1,19 @@
+"use client";
+
+import { useAuthStore } from "@/store/auth-store";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { buttonVariants } from "@/components/ui/button";
 import Link from "next/link";
 import { Users, ClipboardList, Tags, ArrowRight } from "lucide-react";
-import { serverFetch } from "@/lib/api-server";
-import { User, ApiResponse } from "@/types";
 
-export default async function AdminDashboardOverview() {
-  let user: User | null = null;
-  try {
-    const response = await serverFetch<ApiResponse<User>>("/api/auth/me");
-    user = response?.data || null;
-  } catch (error) {
-    console.error("Failed to fetch user on admin overview", error);
-  }
+export default function AdminDashboardOverview() {
+  const { user } = useAuthStore();
 
   return (
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Admin Dashboard</h1>
-        <p className="text-muted-foreground mt-1">Welcome back, {user?.userName || "Admin"}. Manage the Basha Khuji platform.</p>
+        <p className="text-muted-foreground mt-1">Welcome back, {user?.userName}. Manage the Basha Khuji platform.</p>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">

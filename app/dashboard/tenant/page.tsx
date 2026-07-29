@@ -1,23 +1,18 @@
+"use client";
+
+import { useAuthStore } from "@/store/auth-store";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { buttonVariants } from "@/components/ui/button";
 import Link from "next/link";
 import { ArrowRight, Building, FileText, CreditCard } from "lucide-react";
-import { serverFetch } from "@/lib/api-server";
-import { User, ApiResponse } from "@/types";
 
-export default async function TenantOverviewPage() {
-  let user: User | null = null;
-  try {
-    const response = await serverFetch<ApiResponse<User>>("/api/auth/me");
-    user = response?.data || null;
-  } catch (error) {
-    console.error("Failed to fetch user on tenant overview", error);
-  }
+export default function TenantOverviewPage() {
+  const { user } = useAuthStore();
 
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Welcome, {user?.userName || "Tenant"}</h1>
+        <h1 className="text-3xl font-bold tracking-tight">Welcome, {user?.userName}</h1>
         <p className="text-muted-foreground mt-1">Manage your rental requests and profile.</p>
       </div>
 

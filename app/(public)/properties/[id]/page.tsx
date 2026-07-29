@@ -1,6 +1,8 @@
+"use client";
+
+import { use } from "react";
 import Image from "next/image";
-import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, useRouter } from "next/navigation";
 import { 
   MapPin, 
   BedDouble, 
@@ -15,33 +17,41 @@ import {
   Briefcase
 } from "lucide-react";
 
-import { buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { serverFetch } from "@/lib/api-server";
-import { Property, ApiResponse } from "@/types";
-import { RentRequestButton } from "@/components/properties/rent-request-button";
+import { useProperty } from "@/hooks/use-properties";
+import { useAuthStore } from "@/store/auth-store";
 
-export const dynamic = "force-dynamic";
+export default function PropertyDetailsPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = use(params);
+  const router = useRouter();
+  const { isAuthenticated, user } = useAuthStore();
+  
+  const { data, isLoading, error } = useProperty(id);
+  const property = data?.data;
 
-export default async function PropertyDetailsPage({ params }: { params: Promise<{ id: string }> }) {
-  const resolvedParams = await params;
-  const { id } = resolvedParams;
-  
-  let property: Property | null = null;
-  
-  try {
-    const data = await serverFetch<ApiResponse<Property>>(`/api/properties/${id}`);
-    if (data?.data) {
-      property = data.data;
-    }
-  } catch (error) {
-    console.error("Failed to fetch property details:", error);
+  if (isLoading) {
+    return (
+      <div className="container mx-auto px-4 py-12 min-h-screen">
+        <div className="animate-pulse space-y-8">
+          <div className="h-10 bg-muted rounded w-1/4"></div>
+          <div className="h-100 bg-muted rounded-xl w-full"></div>
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="md:col-span-2 space-y-4">
+              <div className="h-8 bg-muted rounded w-1/3"></div>
+              <div className="h-32 bg-muted rounded w-full"></div>
+            </div>
+            <div className="h-64 bg-muted rounded-xl w-full"></div>
+          </div>
+        </div>
+      </div>
+    );
   }
 
-  if (!property) {
+  if (error || !property) {
     return notFound();
   }
 
@@ -63,15 +73,24 @@ export default async function PropertyDetailsPage({ params }: { params: Promise<
     }).format(amount);
   };
 
+  const handleRentRequest = () => {
+    if (!isAuthenticated) {
+      router.push(`/login?callbackUrl=/properties/${id}`);
+      return;
+    }
+    // In Phase 6, this will open a modal to submit a rental request
+    router.push(`/dashboard/tenant/requests/new?propertyId=${id}`);
+  };
+
   return (
     <div className="min-h-screen pb-20">
       {/* Header section with back button */}
       <div className="bg-muted/30 border-b">
         <div className="container mx-auto px-4 py-4">
-          <Link href="/properties" className={buttonVariants({ variant: "ghost", className: "pl-0 text-muted-foreground hover:text-foreground" })}>
+          <Button variant="ghost" className="pl-0 text-muted-foreground hover:text-foreground" onClick={() => router.back()}>
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to properties
-          </Link>
+          </Button>
         </div>
       </div>
 
@@ -207,7 +226,18 @@ export default async function PropertyDetailsPage({ params }: { params: Promise<
                 </div>
               </CardContent>
               <CardFooter>
-                <RentRequestButton propertyId={property.propertyId} isAvailable={property.isAvailable} />
+                <Button 
+                  size="lg" 
+                  className="w-full text-base font-semibold"
+                  disabled={!property.isAvailable || user?.role === "LANDLORD" || user?.role === "ADMIN"}
+                  onClick={handleRentRequest}
+                >
+                  {!property.isAvailable 
+                    ? "Currently Unavailable" 
+                    : user?.role === "LANDLORD" || user?.role === "ADMIN"
+                      ? "Tenants Only"
+                      : "Request to Rent"}
+                </Button>
               </CardFooter>
             </Card>
 
@@ -237,8 +267,8 @@ export default async function PropertyDetailsPage({ params }: { params: Promise<
                       <div className="space-y-3 text-sm">
                         {property.user.email && (
                           <div className="flex items-center gap-3 text-muted-foreground">
-                             <Mail className="h-4 w-4 shrink-0 text-primary" />
-                             <span className="truncate" title={property.user.email}>{property.user.email}</span>
+                            <Mail className="h-4 w-4 shrink-0 text-primary" />
+                            <span className="truncate" title={property.user.email}>{property.user.email}</span>
                           </div>
                         )}
                         {property.user.phoneNumber && (

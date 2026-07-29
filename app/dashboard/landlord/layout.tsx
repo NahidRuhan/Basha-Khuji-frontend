@@ -1,23 +1,32 @@
-import { redirect } from "next/navigation";
-import { UserRole, User, ApiResponse } from "@/types";
-import { serverFetch } from "@/lib/api-server";
+"use client";
+
+import { useAuthStore } from "@/store/auth-store";
+import { UserRole } from "@/types";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { Loader2 } from "lucide-react";
 import { LandlordSidebar } from "@/components/dashboard/landlord-sidebar";
 
-export default async function LandlordDashboardLayout({
+export default function LandlordDashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  try {
-    const response = await serverFetch<ApiResponse<User>>("/api/auth/me");
-    const user = response?.data;
+  const { user, isAuthenticated, isLoading } = useAuthStore();
+  const router = useRouter();
 
-    if (!user || user.role !== UserRole.LANDLORD) {
-      redirect("/login");
+  useEffect(() => {
+    if (!isLoading && (!isAuthenticated || user?.role !== UserRole.LANDLORD)) {
+      router.push("/login");
     }
-  } catch {
-    // If unauthorized or error, redirect to login
-    redirect("/login");
+  }, [isAuthenticated, user, isLoading, router]);
+
+  if (isLoading || !isAuthenticated || user?.role !== UserRole.LANDLORD) {
+    return (
+      <div className="flex items-center justify-center min-h-[50vh]">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
   }
 
   return (
