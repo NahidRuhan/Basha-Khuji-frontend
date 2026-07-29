@@ -26,7 +26,7 @@ export default function ErrorBoundary({
         <AlertOctagon className="h-24 w-24 text-destructive opacity-80 mb-6" />
         <h1 className="text-4xl font-bold tracking-tight sm:text-5xl mb-4">Something went wrong!</h1>
         <p className="text-muted-foreground text-lg max-w-md mx-auto mb-8">
-          An unexpected error has occurred. We've been notified and are looking into it.
+          An unexpected error has occurred. We&apos;ve been notified and are looking into it.
         </p>
         <div className="flex gap-4">
           <Button size="lg" onClick={() => reset()}>

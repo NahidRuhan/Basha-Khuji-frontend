@@ -96,6 +96,8 @@ export const useUpdateLandlordRequest = () => {
 };
 
 export const useCreateReview = () => {
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: async (data: { requestId: string; rating: number; review: string }) => {
       const response = await api.post<ApiResponse<any>>("/api/reviews", data);
@@ -103,6 +105,7 @@ export const useCreateReview = () => {
     },
     onSuccess: (data) => {
       toast.success(data.message || "Review submitted successfully!");
+      queryClient.invalidateQueries({ queryKey: ["my-requests"] });
     },
     onError: (error: any) => {
       toast.error(error.response?.data?.message || "Failed to submit review.");
