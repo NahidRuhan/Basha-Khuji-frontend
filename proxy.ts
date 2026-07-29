@@ -5,10 +5,8 @@ export function proxy(request: NextRequest) {
   const token = request.cookies.get("accessToken")?.value;
   const path = request.nextUrl.pathname;
 
-  // Paths that are publicly accessible
-  const isPublicPath = path === "/" || path.startsWith("/properties");
   // Paths that are only for unauthenticated users
-  const isAuthPath = path.startsWith("/auth");
+  const isAuthPath = path === "/login" || path === "/register";
   // Paths that require authentication
   const isDashboardPath = path.startsWith("/dashboard");
 

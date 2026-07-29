@@ -19,7 +19,7 @@ export const useLogin = () => {
         success: boolean;
         message: string;
         data: { accessToken: string; refreshToken?: string };
-      }>("/api/login", data);
+      }>("/api/auth/login", data);
       
       const tokens = loginResponse.data.data;
       
