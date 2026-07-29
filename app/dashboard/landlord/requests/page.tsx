@@ -17,6 +17,7 @@ import {
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useState } from "react";
+import { TenantInfoModal } from "@/components/dashboard/tenant-info-modal";
 
 export default function LandlordRequestsPage() {
   const { data, isLoading } = useLandlordRequests();
@@ -133,7 +134,18 @@ export default function LandlordRequestsPage() {
                         </div>
                       </div>
                     </div>
+                    {request.user && (
+                      <div className="shrink-0 ml-4 hidden sm:block">
+                        <TenantInfoModal tenant={request.user} />
+                      </div>
+                    )}
                   </div>
+                  
+                  {request.user && (
+                    <div className="sm:hidden mb-4">
+                      <TenantInfoModal tenant={request.user} />
+                    </div>
+                  )}
                   
                   <div className="bg-muted/40 rounded-lg p-4 mb-6 flex-1 text-sm">
                     <div className="font-medium mb-1 flex items-center gap-2">

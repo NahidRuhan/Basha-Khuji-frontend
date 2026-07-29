@@ -112,3 +112,15 @@ export const useCreateReview = () => {
     },
   });
 };
+
+export const useTenantRequestHistory = (userId: string) => {
+  return useQuery({
+    queryKey: ["tenant-request-history", userId],
+    queryFn: async () => {
+      const response = await api.get<ApiResponse<RentalRequest[]>>(`/api/landlord/tenant-history/${userId}`);
+      return response.data;
+    },
+    enabled: !!userId,
+  });
+};
+
