@@ -1,18 +1,23 @@
-"use client";
-
-import { useAuthStore } from "@/store/auth-store";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { buttonVariants } from "@/components/ui/button";
 import Link from "next/link";
 import { Building, ClipboardList, PlusCircle, ArrowRight } from "lucide-react";
+import { serverFetch } from "@/lib/api-server";
+import { User, ApiResponse } from "@/types";
 
-export default function LandlordDashboardOverview() {
-  const { user } = useAuthStore();
+export default async function LandlordDashboardOverview() {
+  let user: User | null = null;
+  try {
+    const response = await serverFetch<ApiResponse<User>>("/api/auth/me");
+    user = response?.data || null;
+  } catch (error) {
+    console.error("Failed to fetch user on landlord overview", error);
+  }
 
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Welcome, {user?.userName}</h1>
+        <h1 className="text-3xl font-bold tracking-tight">Welcome, {user?.userName || "Landlord"}</h1>
         <p className="text-muted-foreground mt-1">Manage your properties and review tenant applications.</p>
       </div>
 

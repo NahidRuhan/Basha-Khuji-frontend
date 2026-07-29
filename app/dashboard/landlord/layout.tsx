@@ -1,32 +1,23 @@
-"use client";
-
-import { useAuthStore } from "@/store/auth-store";
-import { UserRole } from "@/types";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
-import { Loader2 } from "lucide-react";
+import { redirect } from "next/navigation";
+import { UserRole, User, ApiResponse } from "@/types";
+import { serverFetch } from "@/lib/api-server";
 import { LandlordSidebar } from "@/components/dashboard/landlord-sidebar";
 
-export default function LandlordDashboardLayout({
+export default async function LandlordDashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const { user, isAuthenticated, isLoading } = useAuthStore();
-  const router = useRouter();
+  try {
+    const response = await serverFetch<ApiResponse<User>>("/api/auth/me");
+    const user = response?.data;
 
-  useEffect(() => {
-    if (!isLoading && (!isAuthenticated || user?.role !== UserRole.LANDLORD)) {
-      router.push("/login");
+    if (!user || user.role !== UserRole.LANDLORD) {
+      redirect("/login");
     }
-  }, [isAuthenticated, user, isLoading, router]);
-
-  if (isLoading || !isAuthenticated || user?.role !== UserRole.LANDLORD) {
-    return (
-      <div className="flex items-center justify-center min-h-[50vh]">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
-    );
+  } catch {
+    // If unauthorized or error, redirect to login
+    redirect("/login");
   }
 
   return (

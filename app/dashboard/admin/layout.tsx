@@ -1,32 +1,23 @@
-"use client";
-
-import { useAuthStore } from "@/store/auth-store";
-import { UserRole } from "@/types";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
-import { Loader2 } from "lucide-react";
+import { redirect } from "next/navigation";
+import { UserRole, User, ApiResponse } from "@/types";
+import { serverFetch } from "@/lib/api-server";
 import { AdminSidebar } from "@/components/dashboard/admin-sidebar";
 
-export default function AdminDashboardLayout({
+export default async function AdminDashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const { user, isAuthenticated, isLoading } = useAuthStore();
-  const router = useRouter();
+  try {
+    const response = await serverFetch<ApiResponse<User>>("/api/auth/me");
+    const user = response?.data;
 
-  useEffect(() => {
-    if (!isLoading && (!isAuthenticated || user?.role !== UserRole.ADMIN)) {
-      router.push("/login");
+    if (!user || user.role !== UserRole.ADMIN) {
+      redirect("/login");
     }
-  }, [isAuthenticated, user, isLoading, router]);
-
-  if (isLoading || !isAuthenticated || user?.role !== UserRole.ADMIN) {
-    return (
-      <div className="flex items-center justify-center min-h-[50vh]">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
-    );
+  } catch {
+    // If unauthorized or error, redirect to login
+    redirect("/login");
   }
 
   return (

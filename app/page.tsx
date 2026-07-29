@@ -1,32 +1,23 @@
-"use client";
-
 import Link from "next/link";
 import Image from "next/image";
-import { Search, MapPin, Building, ArrowRight } from "lucide-react";
+import { MapPin, Building, ArrowRight } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { PropertyCard } from "@/components/shared/property-card";
-import { PropertyCardSkeleton } from "@/components/shared/loading-skeleton";
-import { useProperties } from "@/hooks/use-properties";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { serverFetch } from "@/lib/api-server";
+import { PaginatedResponse, Property } from "@/types";
+import { HeroSearch } from "@/components/home/hero-search";
 
-export default function Home() {
-  const router = useRouter();
-  const [searchTerm, setSearchTerm] = useState("");
-  
-  // Fetch latest properties (limit to 6 for the home page)
-  const { data, isLoading } = useProperties({ limit: 6 });
-  const properties = data?.data || [];
+export const dynamic = "force-dynamic";
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (searchTerm.trim()) {
-      router.push(`/properties?searchTerm=${encodeURIComponent(searchTerm)}`);
-    } else {
-      router.push(`/properties`);
-    }
-  };
+export default async function Home() {
+  // Fetch latest properties (limit to 6 for the home page) server-side
+  let properties: Property[] = [];
+  try {
+    const data = await serverFetch<PaginatedResponse<Property>>("/api/properties?limit=6");
+    properties = data?.data || [];
+  } catch (error) {
+    console.error("Failed to fetch featured properties:", error);
+  }
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -56,24 +47,8 @@ export default function Home() {
               The smartest way to find, rent, and manage properties in Bangladesh. Discover thousands of rental options tailored to your needs.
             </p>
             
-            {/* Search Bar */}
-            <div className="w-full max-w-2xl mx-auto mt-8 bg-background/80 backdrop-blur-xl p-2 rounded-2xl shadow-xl border border-primary/10">
-              <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-2">
-                <div className="relative flex-1 flex items-center">
-                  <Search className="absolute left-4 h-5 w-5 text-muted-foreground" />
-                  <Input 
-                    type="text" 
-                    placeholder="Search by city, neighborhood, or property name..." 
-                    className="w-full pl-12 h-14 bg-transparent border-none shadow-none focus-visible:ring-0 text-base"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                  />
-                </div>
-                <Button type="submit" size="lg" className="h-14 px-8 rounded-xl shrink-0 text-base font-semibold shadow-md">
-                  Search
-                </Button>
-              </form>
-            </div>
+            {/* Search Bar - Client Component */}
+            <HeroSearch />
             
             {/* Quick Stats/Tags */}
             <div className="flex flex-wrap justify-center gap-4 pt-4 text-sm font-medium text-muted-foreground">
@@ -104,12 +79,7 @@ export default function Home() {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-          {isLoading ? (
-            // Skeleton loaders
-            Array.from({ length: 6 }).map((_, i) => (
-              <PropertyCardSkeleton key={i} />
-            ))
-          ) : properties.length > 0 ? (
+          {properties.length > 0 ? (
             properties.map((property) => (
               <PropertyCard key={property.propertyId} property={property} />
             ))
