@@ -9,7 +9,8 @@ import {
   Users, 
   ClipboardList, 
   Tags,
-  LogOut 
+  LogOut,
+  UserCircle
 } from "lucide-react";
 import { useLogout } from "@/hooks/use-auth";
 
@@ -33,6 +34,11 @@ const sidebarItems = [
     title: "Categories",
     href: "/dashboard/admin/categories",
     icon: Tags,
+  },
+  {
+    title: "Profile Settings",
+    href: "/dashboard/admin/profile",
+    icon: UserCircle,
   }
 ];
 

@@ -46,6 +46,13 @@ export function Navbar() {
     return "/dashboard/tenant";
   };
 
+  const getProfileLink = () => {
+    if (!user) return "/login";
+    if (user.role === UserRole.ADMIN) return "/dashboard/admin/profile";
+    if (user.role === UserRole.LANDLORD) return "/dashboard/landlord/profile";
+    return "/dashboard/tenant/profile";
+  };
+
   const navLinks = [
     { href: "/", label: "Home", icon: Home },
     { href: "/properties", label: "Properties", icon: Building2 },
@@ -138,9 +145,9 @@ export function Navbar() {
                     <span>Dashboard</span>
                   </Link>
                 </DropdownMenuItem>
-                {user?.role === UserRole.TENANT && (
+                {user && (
                   <DropdownMenuItem>
-                    <Link href="/dashboard/tenant/profile" className="cursor-pointer flex items-center w-full">
+                    <Link href={getProfileLink()} className="cursor-pointer flex items-center w-full">
                       <UserCircle className="mr-2 h-4 w-4" />
                       <span>Profile</span>
                     </Link>
