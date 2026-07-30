@@ -103,14 +103,14 @@ export const useLogout = () => {
       clearUser();
       queryClient.clear();
       toast.success("Logged out successfully");
-      router.push("/login");
+      window.location.href = "/login";
     },
     onError: () => {
       // Even if API fails, clear local state
       clearTokens();
       clearUser();
       queryClient.clear();
-      router.push("/login");
+      window.location.href = "/login";
     },
   });
 };

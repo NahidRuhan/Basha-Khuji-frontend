@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { useProperty, useUpdateProperty } from "@/hooks/use-properties";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -39,10 +39,7 @@ export default function EditPropertyPage() {
   const [images, setImages] = useState<string[]>([]);
   const [isUploadingImages, setIsUploadingImages] = useState(false);
 
-  const [prevPropertyData, setPrevPropertyData] = useState(propertyData);
-
-  if (propertyData !== prevPropertyData) {
-    setPrevPropertyData(propertyData);
+  useEffect(() => {
     if (propertyData?.data) {
       const p = propertyData.data;
       setFormData({
@@ -57,7 +54,7 @@ export default function EditPropertyPage() {
       setAmenities(p.amenities || []);
       setImages(p.images || []);
     }
-  }
+  }, [propertyData]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData(prev => ({ ...prev, [e.target.id]: e.target.value }));
