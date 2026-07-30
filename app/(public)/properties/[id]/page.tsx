@@ -18,7 +18,7 @@ async function getProperty(id: string): Promise<Property | undefined> {
     if (!res.ok) return undefined;
     const data: ApiResponse<Property> = await res.json();
     return data.data;
-  } catch (error) {
+  } catch {
     return undefined;
   }
 }
