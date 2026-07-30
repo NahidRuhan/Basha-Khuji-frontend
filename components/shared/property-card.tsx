@@ -20,7 +20,8 @@ export function PropertyCard({ property, priority = false }: PropertyCardProps) 
   const primaryImage = property.images && property.images.length > 0 ? getValidImageUrl(property.images[0]) : null;
 
   return (
-    <Card className="overflow-hidden flex flex-col group h-full transition-all hover:shadow-md hover:border-primary/50">
+    <Link href={`/properties/${property.propertyId}`} className="block h-full outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-xl">
+      <Card className="overflow-hidden flex flex-col group h-full transition-all hover:shadow-md hover:border-primary/50">
       <div className="relative h-48 w-full overflow-hidden bg-muted">
         {primaryImage ? (
           <Image
@@ -53,11 +54,9 @@ export function PropertyCard({ property, priority = false }: PropertyCardProps) 
       
       <CardContent className="p-4 grow flex flex-col">
         <div className="flex items-start justify-between gap-2 mb-2">
-          <Link href={`/properties/${property.propertyId}`} className="hover:underline">
-            <h3 className="font-semibold text-lg line-clamp-1" title={property.propertyName}>
-              {property.propertyName}
-            </h3>
-          </Link>
+          <h3 className="font-semibold text-lg line-clamp-1" title={property.propertyName}>
+            {property.propertyName}
+          </h3>
           <div className="text-lg font-bold text-primary whitespace-nowrap">
             ৳{property.price.toLocaleString()}
             <span className="text-xs text-muted-foreground font-normal">/mo</span>
@@ -98,6 +97,7 @@ export function PropertyCard({ property, priority = false }: PropertyCardProps) 
           </div>
         </div>
       </CardFooter>
-    </Card>
+      </Card>
+    </Link>
   );
 }
