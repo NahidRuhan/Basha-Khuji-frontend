@@ -20,7 +20,7 @@ export interface PropertyFilters {
   limit?: number;
 }
 
-export const useProperties = (filters?: PropertyFilters) => {
+export const useProperties = (filters?: PropertyFilters, initialData?: PaginatedResponse<Property>) => {
   return useQuery({
     queryKey: ["properties", filters],
     queryFn: async () => {
@@ -37,6 +37,7 @@ export const useProperties = (filters?: PropertyFilters) => {
       const response = await api.get<PaginatedResponse<Property>>(`/api/properties?${params.toString()}`);
       return response.data;
     },
+    initialData,
   });
 };
 

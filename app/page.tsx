@@ -1,32 +1,33 @@
-"use client";
-
 import Link from "next/link";
 import Image from "next/image";
-import { Search, MapPin, Building, ArrowRight } from "lucide-react";
+import { MapPin, Building, ArrowRight } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { PropertyCard } from "@/components/shared/property-card";
-import { PropertyCardSkeleton } from "@/components/shared/loading-skeleton";
-import { useProperties } from "@/hooks/use-properties";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { HeroSearch } from "./_components/hero-search";
+import { Property, PaginatedResponse } from "@/types";
 
-export default function Home() {
-  const router = useRouter();
-  const [searchTerm, setSearchTerm] = useState("");
-  
-  // Fetch latest properties (limit to 6 for the home page)
-  const { data, isLoading } = useProperties({ limit: 6 });
-  const properties = data?.data || [];
-
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (searchTerm.trim()) {
-      router.push(`/properties?searchTerm=${encodeURIComponent(searchTerm)}`);
-    } else {
-      router.push(`/properties`);
+async function getFeaturedProperties(): Promise<Property[]> {
+  try {
+    const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+    const res = await fetch(`${API_URL}/api/properties?limit=6`, {
+      next: { revalidate: 60 } // Cache for 60 seconds
+    });
+    
+    if (!res.ok) {
+      console.error("Failed to fetch properties:", res.status);
+      return [];
     }
-  };
+    
+    const data: PaginatedResponse<Property> = await res.json();
+    return data.data || [];
+  } catch (error) {
+    console.error("Error fetching properties:", error);
+    return [];
+  }
+}
+
+export default async function Home() {
+  const properties = await getFeaturedProperties();
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -56,24 +57,8 @@ export default function Home() {
               The smartest way to find, rent, and manage properties in Bangladesh. Discover thousands of rental options tailored to your needs.
             </p>
             
-            {/* Search Bar */}
-            <div className="w-full max-w-2xl mx-auto mt-8 bg-background/80 backdrop-blur-xl p-2 rounded-2xl shadow-xl border border-primary/10">
-              <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-2">
-                <div className="relative flex-1 flex items-center">
-                  <Search className="absolute left-4 h-5 w-5 text-muted-foreground" />
-                  <Input 
-                    type="text" 
-                    placeholder="Search by city, neighborhood, or property name..." 
-                    className="w-full pl-12 h-14 bg-transparent border-none shadow-none focus-visible:ring-0 text-base"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                  />
-                </div>
-                <Button type="submit" size="lg" className="h-14 px-8 rounded-xl shrink-0 text-base font-semibold shadow-md">
-                  Search
-                </Button>
-              </form>
-            </div>
+            {/* Search Bar (Client Component) */}
+            <HeroSearch />
             
             {/* Quick Stats/Tags */}
             <div className="flex flex-wrap justify-center gap-4 pt-4 text-sm font-medium text-muted-foreground">
@@ -104,12 +89,7 @@ export default function Home() {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-          {isLoading ? (
-            // Skeleton loaders
-            Array.from({ length: 6 }).map((_, i) => (
-              <PropertyCardSkeleton key={i} />
-            ))
-          ) : properties.length > 0 ? (
+          {properties.length > 0 ? (
             properties.map((property, idx) => (
               <PropertyCard key={property.propertyId} property={property} priority={idx < 2} />
             ))
