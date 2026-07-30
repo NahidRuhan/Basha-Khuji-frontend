@@ -306,7 +306,9 @@ function PropertiesContent() {
               <SheetHeader className="mb-6">
                 <SheetTitle>Filters</SheetTitle>
               </SheetHeader>
-              {filterForm}
+              <div className="px-4 pb-8 overflow-y-auto h-[calc(100vh-100px)]">
+                {filterForm}
+              </div>
             </SheetContent>
           </Sheet>
         </div>

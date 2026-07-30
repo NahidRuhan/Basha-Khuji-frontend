@@ -81,7 +81,7 @@ export default function TenantPaymentsPage() {
                         <Building className="h-4 w-4 text-muted-foreground" />
                         {payment.rentalRequest?.property?.propertyName || "Property Payment"}
                       </h3>
-                      <div className="text-sm text-muted-foreground font-mono mt-1">
+                      <div className="text-sm text-muted-foreground font-mono mt-1 break-all">
                         TrxID: {payment.transactionId}
                       </div>
                     </div>
