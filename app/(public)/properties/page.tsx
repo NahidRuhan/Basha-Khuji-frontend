@@ -25,7 +25,7 @@ async function getProperties(searchParams: { [key: string]: string | string[] | 
     if (!res.ok) return undefined;
     const data = await res.json();
     return data;
-  } catch (error) {
+  } catch {
     return undefined;
   }
 }
@@ -38,7 +38,7 @@ async function getCategories(): Promise<ApiResponse<Category[]> | undefined> {
     });
     if (!res.ok) return undefined;
     return await res.json();
-  } catch (error) {
+  } catch {
     return undefined;
   }
 }
@@ -51,7 +51,7 @@ async function getLocations(): Promise<ApiResponse<Location[]> | undefined> {
     });
     if (!res.ok) return undefined;
     return await res.json();
-  } catch (error) {
+  } catch {
     return undefined;
   }
 }

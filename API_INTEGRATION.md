@@ -1,60 +1,55 @@
-# Basha Khuji API Integration Guide
+# Basha Khuji API Integration Map
 
-This document summarizes how the Next.js frontend integrates with the Express backend using TanStack React Query and Axios.
+This document maps the React Query hooks and frontend components to their respective Express backend endpoints. All endpoints have been implemented and consumed successfully.
 
-## 1. Authentication
+## Auth & Users
+| Backend Endpoint | Frontend Hook | Used In Component |
+|-----------------|---------------|-------------------|
+| `POST /api/user/register` | `useRegister` | `app/(auth)/_components/register-form.tsx` |
+| `POST /api/auth/login` | `useLogin` | `app/(auth)/_components/login-form.tsx` |
+| `POST /api/auth/refresh-token` | N/A (Axios Interceptor) | `lib/api.ts` (Runs automatically on 401s) |
+| `POST /api/auth/logout` | `useLogout` | `components/shared/navbar.tsx` |
+| `GET /api/auth/me` | `useCurrentUser` | `components/shared/navbar.tsx`, `role-guard.tsx` |
+| `PATCH /api/user/my-profile` | `useUpdateProfile` | `app/dashboard/(landlord/tenant)/profile/page.tsx` |
 
-The platform uses a token-based authentication system (`accessToken` and `refreshToken`).
+## Landlord APIs
+| Backend Endpoint | Frontend Hook | Used In Component |
+|-----------------|---------------|-------------------|
+| `POST /api/landlord/properties` | `useCreateProperty` | `app/dashboard/landlord/properties/new/page.tsx` |
+| `PUT /api/landlord/properties/:id` | `useUpdateProperty` | `app/dashboard/landlord/properties/[id]/edit/page.tsx` |
+| `PATCH /api/landlord/properties/:id` | `useDeleteProperty` | `app/dashboard/landlord/properties/_components/landlord-properties-client.tsx` |
+| `GET /api/landlord/requests` | `useLandlordRequests` | `app/dashboard/landlord/requests/_components/landlord-requests-client.tsx` |
+| `PATCH /api/landlord/requests/:id`| `useUpdateLandlordRequest` | `app/dashboard/landlord/requests/_components/landlord-requests-client.tsx` |
+| `GET /api/landlord/my-properties` | `useMyProperties` | `app/dashboard/landlord/properties/_components/landlord-properties-client.tsx` |
+| `GET /api/landlord/tenant-history/:id`| `useTenantRequestHistory`| `app/dashboard/landlord/requests/_components/landlord-requests-client.tsx` |
 
-- **Axios Interceptors (`lib/api.ts`)**: Automatically attaches the `Bearer` token to every request if the user is authenticated.
-- **Refresh Token Rotation**: If a request fails with a 401 Unauthorized error, the interceptor automatically attempts to call `/api/auth/refresh-token`. If successful, the original request is retried with the new token.
-- **Client State (`store/auth-store.ts`)**: Zustand handles global state, storing the currently authenticated `User` object so it can be accessed instantly by any component.
-- **Hooks (`hooks/use-auth.ts`)**: 
-  - `useLogin()`: Logs in, sets cookies, fetches the profile, and updates Zustand.
-  - `useRegister()`: Registers a new user.
-  - `useLogout()`: Calls the logout endpoint and clears local state and cookies.
+## Tenant APIs
+| Backend Endpoint | Frontend Hook | Used In Component |
+|-----------------|---------------|-------------------|
+| `POST /api/requests` | `useCreateRequest` | `app/(public)/properties/[id]/_components/property-sidebar.tsx` |
+| `GET /api/requests` | `useMyRequests` | `app/dashboard/tenant/requests/_components/tenant-requests-client.tsx` |
+| `GET /api/requests/:id` | `useRequest` | `app/dashboard/tenant/requests/[id]/pay/page.tsx` |
 
-## 2. API Endpoints Covered
+## Public Properties
+| Backend Endpoint | Frontend Hook | Used In Component |
+|-----------------|---------------|-------------------|
+| `GET /api/properties` | `useProperties` | `app/(public)/properties/page.tsx` (Server), `properties-client.tsx` |
+| `GET /api/properties/category` | `useCategories` | `app/_components/hero-search.tsx`, Filters |
+| `GET /api/properties/location` | `useLocations` | `app/_components/hero-search.tsx`, Filters |
+| `GET /api/properties/:id` | `useProperty` | `app/(public)/properties/[id]/page.tsx` (Server) |
 
-We have successfully integrated the following routes from the backend API:
+## Payments & Reviews
+| Backend Endpoint | Frontend Hook | Used In Component |
+|-----------------|---------------|-------------------|
+| `POST /api/payments/create` | `useInitiatePayment` | `app/dashboard/tenant/requests/[id]/pay/page.tsx` |
+| `GET /api/payments` | (Inline `useQuery`) | `app/dashboard/tenant/payments/_components/tenant-payments-client.tsx` |
+| `POST /api/payments/webhook` | N/A (Server-only) | Processed by backend directly from Stripe |
+| `POST /api/reviews` | `useCreateReview` | `app/dashboard/tenant/requests/_components/tenant-requests-client.tsx` |
 
-### Auth & Users
-- `POST /api/user/register` - Create new Tenant/Landlord
-- `POST /api/login` - Authenticate
-- `POST /api/auth/refresh-token` - Refresh session
-- `POST /api/auth/logout` - Clear session
-- `GET /api/auth/me` - Get current user profile
-- `PATCH /api/user/my-profile` - Update user profile
-
-### Properties (Public & Landlord)
-- `GET /api/properties` - Browse properties (with filters)
-- `GET /api/properties/:id` - View property details
-- `GET /api/landlord/my-properties` - View landlord's properties
-- `POST /api/landlord/properties` - Create a property
-- `PUT /api/landlord/properties/:id` - Update a property
-- `PATCH /api/landlord/properties/:id` - Archive a property
-
-### Rental Requests (Tenant & Landlord)
-- `POST /api/requests` - Tenant applies for a property
-- `GET /api/requests` - Tenant views their applications
-- `GET /api/landlord/requests` - Landlord views applications on their properties
-- `PATCH /api/landlord/requests/:id` - Landlord approves/rejects an application
-
-### Payments (Tenant)
-- `GET /api/payments` - Tenant views payment history
-- `POST /api/payments/create-payment` - Tenant initiates payment for an APPROVED request
-
-### Admin Features
-- `GET /api/admin/users` - View all users
-- `PATCH /api/admin/users/:id` - Ban/Unban user
-- `GET /api/admin/rentals` - View all rentals
-- `POST /api/admin/categories` - Create new category
-- `GET /api/categories` - Fetch public categories
-- `GET /api/locations` - Fetch public locations
-
-## 3. Error Handling
-
-- **API Errors**: The backend returns standardized error formats (`{ success: false, message: "..." }`). Axios interceptors reject the promise with these errors.
-- **UI Notifications**: React Query's `onError` callbacks use `sonner` toast notifications to display the exact backend error message to the user.
-- **Global Errors**: React Error Boundaries (`error.tsx`) catch rendering issues.
-- **404 Handling**: A global `not-found.tsx` provides a seamless fallback for broken links.
+## Admin APIs
+| Backend Endpoint | Frontend Hook | Used In Component |
+|-----------------|---------------|-------------------|
+| `GET /api/admin/users` | `useAdminUsers` | `app/dashboard/admin/users/page.tsx` |
+| `PATCH /api/admin/users/:id` | `useUpdateUserStatus` | `app/dashboard/admin/users/page.tsx` |
+| `GET /api/admin/rentals` | `useAdminRentals` | `app/dashboard/admin/rentals/page.tsx` |
+| `POST /api/admin/categories`| `useCreateCategory` | `app/dashboard/admin/categories/page.tsx` |
