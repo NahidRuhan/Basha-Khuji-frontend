@@ -47,43 +47,42 @@ export function AdminSidebar() {
   const { mutate: logout } = useLogout();
 
   return (
-    <div className="flex flex-col h-full w-full md:w-64 space-y-4 py-4 border-r pr-4">
-      <div className="px-3 py-2">
-        <h2 className="mb-2 px-4 text-lg font-semibold tracking-tight">
+    <aside className="w-full md:w-64 shrink-0 space-y-2">
+      <div className="bg-card rounded-xl border shadow-sm p-4">
+        <h2 className="font-semibold px-4 mb-4 text-muted-foreground uppercase tracking-wider text-xs">
           Admin Area
         </h2>
-        <div className="space-y-1">
-          {sidebarItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={cn(
-                buttonVariants({ variant: "ghost" }),
-                pathname === item.href || pathname?.startsWith(`${item.href}/`) && item.href !== "/dashboard/admin"
-                  ? "bg-muted hover:bg-muted font-medium"
-                  : "hover:bg-transparent hover:underline",
-                "w-full justify-start"
-              )}
-            >
-              <item.icon className="mr-2 h-4 w-4" />
-              {item.title}
-            </Link>
-          ))}
-        </div>
+        <nav className="flex flex-wrap md:flex-col gap-2 md:gap-1">
+          {sidebarItems.map((item) => {
+            const isActive = pathname === item.href || (pathname?.startsWith(`${item.href}/`) && item.href !== "/dashboard/admin");
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={cn(
+                  "flex items-center gap-3 px-4 py-3 rounded-lg transition-colors whitespace-nowrap",
+                  isActive 
+                    ? "bg-primary/10 text-primary font-medium" 
+                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                )}
+              >
+                <item.icon className="h-5 w-5 shrink-0" />
+                {item.title}
+              </Link>
+            );
+          })}
+        </nav>
       </div>
       
-      <div className="mt-auto px-3">
+      <div className="bg-card rounded-xl border shadow-sm p-4">
         <button
           onClick={() => logout()}
-          className={cn(
-            buttonVariants({ variant: "ghost" }),
-            "w-full justify-start text-muted-foreground hover:text-foreground"
-          )}
+          className="flex w-full items-center gap-3 px-4 py-3 rounded-lg transition-colors text-destructive hover:bg-destructive/10 whitespace-nowrap font-medium"
         >
-          <LogOut className="mr-2 h-4 w-4" />
+          <LogOut className="h-5 w-5 shrink-0" />
           Log out
         </button>
       </div>
-    </div>
+    </aside>
   );
 }

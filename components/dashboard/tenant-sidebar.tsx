@@ -21,7 +21,7 @@ export function TenantSidebar() {
         <h2 className="font-semibold px-4 mb-4 text-muted-foreground uppercase tracking-wider text-xs">
           Tenant Menu
         </h2>
-        <nav className="flex md:flex-col gap-1 overflow-x-auto md:overflow-visible pb-2 md:pb-0">
+        <nav className="flex flex-wrap md:flex-col gap-2 md:gap-1">
           {tenantLinks.map((link) => {
             const isActive = pathname === link.href;
             const Icon = link.icon;

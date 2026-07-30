@@ -92,7 +92,7 @@ export default function Home() {
 
       {/* Featured Properties Section */}
       <section className="py-20 container mx-auto px-4 md:px-6">
-        <div className="flex flex-col md:flex-row justify-between items-end mb-10 gap-4">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-10 gap-4">
           <div>
             <h2 className="text-3xl font-bold tracking-tight mb-2">Featured Properties</h2>
             <p className="text-muted-foreground">Explore the latest and most popular rentals.</p>
@@ -110,8 +110,8 @@ export default function Home() {
               <PropertyCardSkeleton key={i} />
             ))
           ) : properties.length > 0 ? (
-            properties.map((property) => (
-              <PropertyCard key={property.propertyId} property={property} />
+            properties.map((property, idx) => (
+              <PropertyCard key={property.propertyId} property={property} priority={idx < 2} />
             ))
           ) : (
             <div className="col-span-full py-20 text-center bg-muted/30 rounded-2xl border border-dashed">

@@ -44,31 +44,32 @@ export function LandlordSidebar() {
   const pathname = usePathname();
 
   return (
-    <nav className="flex flex-col gap-2 p-4 md:w-64 border-r md:min-h-[calc(100vh-4rem)]">
-      <div className="mb-4 px-2">
-        <h2 className="text-lg font-semibold tracking-tight">Landlord Dashboard</h2>
-        <p className="text-sm text-muted-foreground">Manage your properties</p>
+    <aside className="w-full md:w-64 shrink-0 space-y-2">
+      <div className="bg-card rounded-xl border shadow-sm p-4">
+        <h2 className="font-semibold px-4 mb-4 text-muted-foreground uppercase tracking-wider text-xs">
+          Landlord Menu
+        </h2>
+        <nav className="flex flex-wrap md:flex-col gap-2 md:gap-1">
+          {sidebarLinks.map((link) => {
+            const isActive = pathname === link.href;
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={cn(
+                  "flex items-center gap-3 px-4 py-3 rounded-lg transition-colors whitespace-nowrap",
+                  isActive 
+                    ? "bg-primary/10 text-primary font-medium" 
+                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                )}
+              >
+                <link.icon className="h-5 w-5 shrink-0" />
+                {link.title}
+              </Link>
+            );
+          })}
+        </nav>
       </div>
-      
-      <div className="flex-1 space-y-1">
-        {sidebarLinks.map((link) => {
-          const isActive = pathname === link.href;
-          return (
-            <Link
-              key={link.href}
-              href={link.href}
-              className={cn(
-                buttonVariants({ variant: isActive ? "secondary" : "ghost" }),
-                "w-full justify-start font-normal",
-                isActive ? "font-medium" : ""
-              )}
-            >
-              <link.icon className="mr-2 h-4 w-4" />
-              {link.title}
-            </Link>
-          );
-        })}
-      </div>
-    </nav>
+    </aside>
   );
 }

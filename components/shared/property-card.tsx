@@ -7,9 +7,10 @@ import { Badge } from "@/components/ui/badge";
 
 interface PropertyCardProps {
   property: Property;
+  priority?: boolean;
 }
 
-export function PropertyCard({ property }: PropertyCardProps) {
+export function PropertyCard({ property, priority = false }: PropertyCardProps) {
   const getValidImageUrl = (url?: string) => {
     if (!url || typeof url !== 'string' || url.trim() === '') return null;
     if (!url.startsWith('http') && !url.startsWith('/')) return `/${url}`;
@@ -26,6 +27,7 @@ export function PropertyCard({ property }: PropertyCardProps) {
             src={primaryImage}
             alt={property.propertyName}
             fill
+            priority={priority}
             className="object-cover transition-transform duration-500 group-hover:scale-105"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
