@@ -88,6 +88,8 @@ export const useUpdateLandlordRequest = () => {
     onSuccess: (data) => {
       toast.success(data.message || "Request updated successfully!");
       queryClient.invalidateQueries({ queryKey: ["landlord-requests"] });
+      queryClient.invalidateQueries({ queryKey: ["properties"] });
+      queryClient.invalidateQueries({ queryKey: ["my-properties"] });
     },
     onError: (error: Error & { response?: { data?: { message?: string } } }) => {
       toast.error(error.response?.data?.message || "Failed to update request.");

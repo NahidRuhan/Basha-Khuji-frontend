@@ -51,7 +51,7 @@ export default function RootLayout({
                   <main className="flex-1">{children}</main>
                   <Footer />
                 </div>
-                <Toaster position="top-center" richColors />
+                <Toaster position="top-right" duration={2000} richColors />
               </TooltipProvider>
             </AuthProvider>
           </QueryProvider>
